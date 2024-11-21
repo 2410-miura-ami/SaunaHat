@@ -15,10 +15,16 @@ public class MessageForm {
 
     private String text;
 
+    private String category;
+
     private int userId;
 
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String userAccount;
+
+    private String userName;
 }
 

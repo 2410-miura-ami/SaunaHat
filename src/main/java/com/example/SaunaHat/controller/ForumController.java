@@ -1,6 +1,8 @@
 package com.example.SaunaHat.controller;
 
+import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.service.MessageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,15 +16,15 @@ import java.util.List;
 
 @Controller
 public class ForumController {
-    //@Autowired
     @Autowired
     HttpSession session;
-    //MessageService messageService;
+    @Autowired
+    MessageService messageService;
 
     /*
      * ログイン画面表示処理？
      */
-    @GetMapping
+    /*@GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
         // form用の空のentityを準備
@@ -38,17 +40,24 @@ public class ForumController {
             session.invalidate();
         }
         return mav;
-    }
+    }*/
     /*
      * ログイン処理？
      */
 
     /*
-     * ホーム画面表示処理
+     * ホーム画面・投稿表示処理
      */
-    @GetMapping("/home")
+    @GetMapping
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
+
+        //投稿の表示
+        //投稿を全件取得
+        List<MessageForm> messages = messageService.findAllMessage();
+
+        //取得した情報を画面にバインド
+        mav.addObject("formModel", messages);
 
         // 画面遷移先を指定
         mav.setViewName("/home");
