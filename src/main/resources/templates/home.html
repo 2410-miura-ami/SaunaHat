@@ -9,6 +9,24 @@
 <div class="header-contents">
     <h1>掲示板</h1>
 </div>
+<--! ログアウトボタン　-->
+<--! ユーザ管理画面への遷移ボタン　-->
+<--! 絞り込み　-->
+<--! ログアウトボタン　-->
+<div class="message-icon" th:each="message : ${messages}">
+    <div class="title">
+        タイトル : <span th:text="${message.title}"/>
+    </div>
+    <div class="category">
+        カテゴリ : <span th:text="${message.category}"/>
+    </div>
+    <div class="name">
+        投稿者名 : <span th:text="${message.name}"/>
+    </div>
+    <div class="text">
+        本文 : <span th:text="${messege.text}"/>
+    </div>
+</div>
 </body>
 </html>
 
