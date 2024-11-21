@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>ユーザー管理</title>
+</head>
+<body>
+<div class="header-contents">
+    <h2>ユーザー管理</h2>
+</div>
+<p class="userList-title">ユーザー一覧</p>
+<div class="main-contents">
+    <div class="head-acount">アカウント</div>
+    <div class="head-name">氏名</div>
+    <div class="head-branch">支社</div>
+    <div class="head-department">部署</div>
+    <div class="head-department">アカウント停止状況</div>
+
+    <div class="user-list" th:each="user : ${users}">
+        <div class="user-account" th:text="${user.account}"></div>
+        <div class="user-name" th:text="${user.name}"></div>
+        <div class="user-branch" th:text="${user.branchId}"></div>
+        <div class="user-department" th:text="${user.departmentId}"></div>
+
+        <!--アカウントの停止情報条件分岐0:稼働状態、1:停止状態-->
+
+        <div class="edit-button">
+            <!--<form th:method="get" th:action="@{/edit/{id}(id=${user.id})" >-->
+            <form>
+                <input type="submit" value="編集" />
+            </form>
+            <!--</form>-->
+        </div>
+    </div>
+
+</div>
+<div class="footer-contents">
+    <form action="/home">
+        <input type="submit" value="戻る" />
+    </form>
+</div>
+</body>
+</html>

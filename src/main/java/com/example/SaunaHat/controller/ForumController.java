@@ -3,6 +3,7 @@ package com.example.SaunaHat.controller;
 import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.service.MessageService;
+import com.example.SaunaHat.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,15 +17,19 @@ import java.util.List;
 
 @Controller
 public class ForumController {
+    
     @Autowired
     HttpSession session;
     @Autowired
     MessageService messageService;
+    @Autowired
+    UserService userService;
+    
 
     /*
      * ログイン画面表示処理？
      */
-    /*@GetMapping
+    @GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
         // form用の空のentityを準備
@@ -40,15 +45,22 @@ public class ForumController {
             session.invalidate();
         }
         return mav;
-    }*/
+    }
+
     /*
-     * ログイン処理？
+     * ログイン処理
      */
+    @GetMapping("/loginUser")
+    public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
+        UserForm loginUser = userService.selectLoginUser(userForm);
+        session.setAttribute("loginUser",loginUser);
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      * ホーム画面・投稿表示処理
      */
-    @GetMapping
+    @GetMapping("/home")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
 
@@ -65,4 +77,47 @@ public class ForumController {
         //画面に遷移
         return mav;
     }
+
+    /*
+     *ユーザー管理画面表示処理
+     */
+    @GetMapping("/userManage")
+    public ModelAndView userManage() {
+        ModelAndView mav = new ModelAndView();
+
+        // ユーザーを全件取得
+        List<UserForm> userData = userService.findAllUser();
+
+        //ユーザーデータオブジェクトを保管
+        mav.addObject("users", userData);
+
+        //画面遷移先を指定
+        mav.setViewName("/user_manage");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *ログアウト処理
+     */
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+
+        ModelAndView mav = new ModelAndView();
+        //空のFormを作成
+        UserForm userForm = new UserForm();
+
+        // Formをバインド先にセット
+        mav.addObject("formModel", userForm);
+        // 画面遷移先を指定
+        mav.setViewName("/login");
+
+
+        // セッションの無効化
+        session.invalidate();
+
+        return mav;
+    }
+
 }

@@ -36,12 +36,12 @@ public class User {
     @Column
     private int isStopped;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
+    @Column
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_date", insertable = false, updatable = false)
     private Date updatedDate;
 
     //Messageと一対多でリレーションを形成

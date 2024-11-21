@@ -6,6 +6,17 @@ body {
 	margin-left: 20px;
 }
 
+.header {
+	text-align: right;
+}
+.header-item {
+    display : inline-block;
+}
+
+.userList-title {
+    margin-left : 20px;
+}
+
 .main-contents {
 	margin: 20px;
 	padding: 10px 10px 5px 10px;
@@ -37,4 +48,8 @@ body {
 
 .text {
     font-size: 12px;
+}
+
+.user-account .user-name {
+    display : inline-block;
 }

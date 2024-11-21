@@ -8,6 +8,16 @@
 <body>
 <div class="header-contents">
     <h1>掲示板</h1>
+
+    <div class="header">
+        <form th:action="@{/userManage}" method="get" class="header-item">
+            <button type="submit">ユーザー管理</button>
+        </form>
+
+        <form th:action="@{/logout}" method="get" class="header-item">
+            <button type="submit">ログアウト</button>
+        </form>
+    </div>
 </div>
 <!-- ログアウトボタン　-->
 <!-- ユーザ管理画面への遷移ボタン　-->
