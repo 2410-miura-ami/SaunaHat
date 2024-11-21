@@ -27,7 +27,7 @@ public class ForumController {
     /*
      * ホーム画面表示処理
      */
-    @GetMapping
+    @GetMapping("/home")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
 
