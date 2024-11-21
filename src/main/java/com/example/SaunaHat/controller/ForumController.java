@@ -18,12 +18,13 @@ import java.util.List;
 @Controller
 public class ForumController {
     //@Autowired
+    //MessageService messageService;
+
     @Autowired
     HttpSession session;
+
     @Autowired
     UserService userService;
-
-    //MessageService messageService;
 
     /*
      * ログイン画面表示処理？
@@ -83,4 +84,42 @@ public class ForumController {
         //画面に遷移
         return mav;
     }
+
+    /*
+     *ユーザー管理画面表示処理
+     */
+    @GetMapping("/userManage")
+    public ModelAndView userManage() {
+        ModelAndView mav = new ModelAndView();
+
+        // ユーザーを全件取得
+        List<UserForm> userData = userService.findAllUser();
+
+        //ユーザーデータオブジェクトを保管
+        mav.addObject("users", userData);
+
+        //画面遷移先を指定
+        mav.setViewName("/user_manage");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *ログアウト処理
+     */
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+
+        ModelAndView mav = new ModelAndView();
+
+        // セッションの無効化
+        session.invalidate();
+
+        //ログイン画面へフォワード処理
+        mav.setViewName("/");
+        //return new ModelAndView("/");
+        return mav;
+    }
+
 }

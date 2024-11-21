@@ -46,4 +46,14 @@ public class UserService {
         }
         return users;
     }
+
+    /*
+     *ユーザー管理画面表示（ユーザー取得）
+     */
+    public List<UserForm> findAllUser(){
+        List<User> results = userRepository.findAll();
+        List<UserForm> users = setUserForm(results);
+        return users;
+    }
+
 }
