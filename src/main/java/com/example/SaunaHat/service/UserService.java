@@ -1,7 +1,8 @@
 package com.example.SaunaHat.service;
 
 public class UserService {
-    select
+    //select{
     // パスワード暗号化
-    String encPassword = CipherUtil.encrypt(password);
+    //String encPassword = CipherUtil.encrypt(password);
+    //}
 }

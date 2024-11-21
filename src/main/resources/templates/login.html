@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.w3.org/1999/xhtml" >
 <head>
   <meta charset="UTF-8">
   <link th:href="@{/css/style.css}" rel="styleSheet">
@@ -10,14 +10,16 @@
   <div class="errorMessages" th:each="${errorMessage:errorMessages}">
     <p th:text="${errorMessage}"></p>
   </div>
-  <form th:action="login" th:method="post"><br />
+  <form th:action="login" th:method="post" th:object="${formModel}">
+    
     <label class="account">アカウント名</label>
-    <input name="account" th:value="accountOrEmail"/> <br />
+    <input type="account" th:field="*{account}" /><br/>
 
     <label class="password">パスワード</label>
-    <input name="password" th:value="password"/> <br />
+    <input name="password" th:field="*{password}"/><br/>
 
     <input type="submit" value="ログイン" /> <br />
+
     <a href="./home">戻る</a>
   </form>
 </div>
