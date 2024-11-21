@@ -34,9 +34,11 @@ public class User {
     @Column
     private int isStopped;
 
-    @Column
+    @Column(name = "created_date", insertable = true, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
     @Column
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 }

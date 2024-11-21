@@ -6,30 +6,27 @@ import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    //select{
-    // パスワード暗号化
-    //String encPassword = CipherUtil.encrypt(password);
-    //}
 
-    /*
-     *ユーザー管理画面表示（ユーザー取得）
-     */
-    public List<UserForm> findAllUser(){
-        List<User> results = userRepository.findAll();
+    public UserForm selectLoginUser(UserForm userForm){
+        // パスワード暗号化
+        //String encPassword = CipherUtil.encrypt(password);
+        String account = userForm.getAccount();
+        String password = userForm.getPassword();
+        List<User> results = userRepository.selectUser(account, password);
         List<UserForm> users = setUserForm(results);
-        return users;
+        return users.get(0);
     }
 
-    /*
-     * DBから取得したデータをFormに設定
-     */
     private List<UserForm> setUserForm(List<User> results) {
         List<UserForm> users = new ArrayList<>();
 
@@ -49,4 +46,14 @@ public class UserService {
         }
         return users;
     }
+
+    /*
+     *ユーザー管理画面表示（ユーザー取得）
+     */
+    public List<UserForm> findAllUser(){
+        List<User> results = userRepository.findAll();
+        List<UserForm> users = setUserForm(results);
+        return users;
+    }
+
 }

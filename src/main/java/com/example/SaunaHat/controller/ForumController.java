@@ -27,8 +27,6 @@ public class ForumController {
     /*
      * ログイン画面表示処理？
      */
-
-    /*
     @GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
@@ -46,17 +44,20 @@ public class ForumController {
         }
         return mav;
     }
-    */
-
     /*
-     * ログイン処理？
+     * ログイン処理
      */
+    @GetMapping("/loginUser")
+    public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
+        UserForm loginUser = userService.selectLoginUser(userForm);
+        session.setAttribute("loginUser",loginUser);
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      * ホーム画面表示処理
      */
-    //@GetMapping("/home")
-    @GetMapping
+    @GetMapping("/home")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
 
@@ -99,8 +100,8 @@ public class ForumController {
         session.invalidate();
 
         //ログイン画面へフォワード処理
-        mav.setViewName("/login");
-
+        mav.setViewName("/");
+        //return new ModelAndView("/");
         return mav;
     }
 
