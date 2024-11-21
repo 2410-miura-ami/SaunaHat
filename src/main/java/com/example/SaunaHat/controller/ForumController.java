@@ -1,6 +1,7 @@
 package com.example.SaunaHat.controller;
 
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class ForumController {
     //@Autowired
     @Autowired
     HttpSession session;
+    @Autowired
+    UserService userService;
+
     //MessageService messageService;
 
     /*
@@ -40,8 +44,14 @@ public class ForumController {
         return mav;
     }
     /*
-     * ログイン処理？
+     * ログイン処理
      */
+    @GetMapping("/loginUser")
+    public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
+        UserForm loginUser = userService.selectLoginUser(userForm);
+        session.setAttribute("loginUser",loginUser);
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      * ホーム画面表示処理
