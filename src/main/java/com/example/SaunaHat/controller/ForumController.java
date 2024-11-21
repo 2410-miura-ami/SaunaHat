@@ -2,6 +2,7 @@ package com.example.SaunaHat.controller;
 
 import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.service.UserService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -48,6 +50,21 @@ public class ForumController {
      */
     @GetMapping("/loginUser")
     public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
+        //エラーメッセージ空箱
+        List<String> errorMessages = new ArrayList<String>();
+        //バリデーション
+        if (StringUtils.isBlank(userForm.getAccount())){
+            errorMessages.add("アカウントを入力してください");
+        }
+        if (StringUtils.isBlank(userForm.getPassword())){
+            errorMessages.add("パスワードを入力してください");
+        }
+        if (!StringUtils.isEmpty(errorMessages.get(0))){
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("errorMessages",errorMessages);
+            return mav;
+        }
+
         UserForm loginUser = userService.selectLoginUser(userForm);
         session.setAttribute("loginUser",loginUser);
         return new ModelAndView("redirect:/home");
