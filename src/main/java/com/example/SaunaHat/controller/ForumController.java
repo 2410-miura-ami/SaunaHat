@@ -27,14 +27,29 @@ public class ForumController {
     /*
      * ホーム画面表示処理
      */
-    @GetMapping("/home")
+    //@GetMapping("/home")
+    @GetMapping
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
 
         // 画面遷移先を指定
+        //mav.setViewName("/home");
+        mav.setViewName("/user_manage");
+
+        //画面に遷移
+        return mav;
+    }
+
+    @GetMapping("/home")
+    public ModelAndView top() {
+        ModelAndView mav = new ModelAndView();
+
+        // 画面遷移先を指定
+        //mav.setViewName("/home");
         mav.setViewName("/home");
 
         //画面に遷移
         return mav;
     }
+
 }
