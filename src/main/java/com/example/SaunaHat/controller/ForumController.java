@@ -1,6 +1,7 @@
 package com.example.SaunaHat.controller;
 
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,19 @@ import java.util.List;
 @Controller
 public class ForumController {
     //@Autowired
+    //MessageService messageService;
+
     @Autowired
     HttpSession session;
-    //MessageService messageService;
+
+    @Autowired
+    UserService userService;
 
     /*
      * ログイン画面表示処理？
      */
+
+    /*
     @GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
@@ -39,6 +46,8 @@ public class ForumController {
         }
         return mav;
     }
+    */
+
     /*
      * ログイン処理？
      */
@@ -52,22 +61,46 @@ public class ForumController {
         ModelAndView mav = new ModelAndView();
 
         // 画面遷移先を指定
-        //mav.setViewName("/home");
+        mav.setViewName("/home");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *ユーザー管理画面表示処理
+     */
+    @GetMapping("/userManage")
+    public ModelAndView userManage() {
+        ModelAndView mav = new ModelAndView();
+
+        // ユーザーを全件取得
+        List<UserForm> userData = userService.findAllUser();
+
+        //ユーザーデータオブジェクトを保管
+        mav.addObject("users", userData);
+
+        //画面遷移先を指定
         mav.setViewName("/user_manage");
 
         //画面に遷移
         return mav;
     }
 
-    @GetMapping("/home")
-    public ModelAndView top() {
+    /*
+     *ログアウト処理
+     */
+    @GetMapping("/logout")
+    public ModelAndView logout() {
+
         ModelAndView mav = new ModelAndView();
 
-        // 画面遷移先を指定
-        //mav.setViewName("/home");
-        mav.setViewName("/home");
+        // セッションの無効化
+        session.invalidate();
 
-        //画面に遷移
+        //ログイン画面へフォワード処理
+        mav.setViewName("/login");
+
         return mav;
     }
 
