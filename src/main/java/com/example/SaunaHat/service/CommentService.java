@@ -13,11 +13,35 @@ import java.util.List;
 public class CommentService {
     @Autowired
     CommentRepository commentRepository;
-    //コメント表示処理
+
+    /*
+     * コメント表示処理
+     *
     public List<CommentForm> findAllComment(){
         List<Comment> results = commentRepository.findAllComment();
         //EntityからFormに詰め替え
         List<CommentForm> comments = setCommentForm(results);
         return reports;
+    }*/
+
+    /*
+     * コメント登録処理
+     */
+    public void addComment(CommentForm commentForm) {
+        //FormからEntityに詰め替え
+        Comment comment = setCommentEntity(commentForm);
+        //Entityを引数にDBに追加
+        commentRepository.save(comment);
+    }
+
+    /*
+     * リクエストから取得した情報をEntityに設定
+     */
+    private Comment setCommentEntity(CommentForm commentForm) {
+        Comment comment = new Comment();
+        comment.setMessageId(commentForm.getMessageId());
+        comment.setUserId(commentForm.getUserId());
+        comment.setText(commentForm.getText());
+        return comment;
     }
 }

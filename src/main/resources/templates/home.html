@@ -45,17 +45,16 @@
             本文<br/>
             <span th:text="${message.text}"/>
         </div>
+        <div class="comments" th:each="comment:${comments}">
+            <div th:if="${comment.messageId == message.id}">
+                <span th:text="${comment.text"/></br>
+            </div>
+        </div>
+        <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${formModel}">
+            <textarea th:field="${text}" size="20" class="add-comment"></textarea><br/>
+            <input type="submit" value="コメント"/>
+        </form>
     </div><br/>
-    <!--コメント表示-->
-    <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${formModel}">
-        <textarea th:field="*{text}" size="20" class="add-comment"/></textarea><br/>
-        <input type="submit" value="コメント"/>
-    </form>
-</div>
-<div class="comments" th:each="comment:${comments}">
-    <div th:if="${comment.messageId == message.id}">
-        <span th:text="${comment.text"/></br>
-    </div>
 </div>
 </body>
 </html>

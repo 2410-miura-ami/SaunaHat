@@ -3,6 +3,8 @@ package com.example.SaunaHat.controller;
 import com.example.SaunaHat.controller.form.CommentForm;
 import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.repository.entity.Comment;
+import com.example.SaunaHat.service.CommentService;
 import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
 import io.micrometer.common.util.StringUtils;
@@ -28,6 +30,8 @@ public class ForumController {
     MessageService messageService;
     @Autowired
     UserService userService;
+    @Autowired
+    CommentService commentService;
 
 
     /*
@@ -175,6 +179,32 @@ public class ForumController {
         //ログイン画面へフォワード処理
         mav.setViewName("/login");
         //return new ModelAndView("./");
+        return mav;
+    }
+
+    /*
+     *コメント登録処理
+     */
+    @PostMapping("/comment/{id}")
+    public ModelAndView comment(@PathVariable int messageId, @ModelAttribute("formModel")@Validated CommentForm commentForm) {
+        ModelAndView mav = new ModelAndView();
+
+        //セッションからユーザIDを取得
+        int userId = ((CommentForm)session.getAttribute("loginUser")).getUserId();
+        //取得した投稿IDとユーザIDをFormにセット
+        commentForm.setMessageId(messageId);
+        commentForm.setUserId(userId);
+
+        //投稿のIDを引数にinsertする
+        commentService.addComment(commentForm);
+
+        //取得した情報を画面にバインド
+        mav.addObject("formModel", commentForm);
+
+        // 画面遷移先を指定
+        mav.setViewName("redirect:/home");
+
+        //画面に遷移
         return mav;
     }
 
