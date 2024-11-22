@@ -126,6 +126,21 @@ public class ForumController {
     }
 
     /*
+     * 新規投稿画面表示
+     */
+    @GetMapping("/new")
+    public ModelAndView newMessage() {
+        ModelAndView mav = new ModelAndView();
+        // 空のformを準備
+        MessageForm messageForm = new MessageForm();
+        // 画面遷移先を指定
+        mav.setViewName("/new");
+        // 準備した空のFormを保管
+        mav.addObject("formModel", messageForm);
+        return mav;
+    }
+
+    /*
      *ユーザー管理画面表示処理
      */
     @GetMapping("/userManage")
