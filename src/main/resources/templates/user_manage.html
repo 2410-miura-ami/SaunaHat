@@ -11,11 +11,11 @@
 </div>
 <p class="userList-title">ユーザー一覧</p>
 <div class="main-contents">
-    <div class="head-acount">アカウント</div>
+    <div class="head-account">アカウント</div>
     <div class="head-name">氏名</div>
     <div class="head-branch">支社</div>
     <div class="head-department">部署</div>
-    <div class="head-department">アカウント停止状況</div>
+    <div class="head-accountStop">アカウント停止状況</div>
 
     <div class="user-list" th:each="user : ${users}">
         <div class="user-account" th:text="${user.account}"></div>

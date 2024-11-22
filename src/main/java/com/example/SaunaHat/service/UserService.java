@@ -17,11 +17,9 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public UserForm selectLoginUser(UserForm userForm){
+    public UserForm selectLoginUser(String account, String password){
         // パスワード暗号化
         //String encPassword = CipherUtil.encrypt(password);
-        String account = userForm.getAccount();
-        String password = userForm.getPassword();
         List<User> results = userRepository.selectUser(account, password);
         List<UserForm> users = setUserForm(results);
         return users.get(0);
