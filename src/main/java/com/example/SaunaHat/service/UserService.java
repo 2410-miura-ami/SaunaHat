@@ -64,4 +64,9 @@ public class UserService {
         return users;
     }
 
+    //アカウント停止・復活変更処理
+    public void editIsStopped(Integer isStoppedId, Integer userId){
+        userRepository.editIsStopped(isStoppedId, userId);
+    }
+
 }
