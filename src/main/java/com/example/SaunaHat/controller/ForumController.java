@@ -4,6 +4,7 @@ import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,46 +28,36 @@ public class ForumController {
     UserService userService;
 
     /*
-     * ログイン画面表示処理？
+     * ログイン画面表示処理
      */
     @GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
-        // form用の空のentityを準備
-        UserForm userForm = new UserForm();
-        // 画面遷移先を指定
         mav.setViewName("/login");
-        // 準備した空のFormを保管
-        mav.addObject("formModel", userForm);
-        //エラーメッセージ表示
-        List<String> errorMessage = (List<String>) session.getAttribute("errorMessages");
-        if (errorMessage != null){
-            mav.addObject("errorMessages", errorMessage);
-            session.invalidate();
-        }
         return mav;
     }
     /*
      * ログイン処理
      */
     @GetMapping("/loginUser")
-    public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
+    public ModelAndView select(@RequestParam(name = "account", required = false) String account,
+                               @RequestParam(name = "password", required = false) String password){
         //エラーメッセージ空箱
         List<String> errorMessages = new ArrayList<String>();
         //バリデーション
-        if (StringUtils.isBlank(userForm.getAccount())){
+        if (StringUtils.isBlank(account)){
             errorMessages.add("アカウントを入力してください");
         }
-        if (StringUtils.isBlank(userForm.getPassword())){
+        if (StringUtils.isBlank(password)){
             errorMessages.add("パスワードを入力してください");
         }
-        if (!StringUtils.isEmpty(errorMessages.get(0))){
-            ModelAndView mav = new ModelAndView();
-            mav.addObject("errorMessages",errorMessages);
-            return mav;
-        }
+        //if (!StringUtils.isEmpty(errorMessages.get(0))){
+            //ModelAndView mav = new ModelAndView();
+            //mav.addObject("errorMessages",errorMessages);
+            //return mav;
+        //}
 
-        UserForm loginUser = userService.selectLoginUser(userForm);
+        UserForm loginUser = userService.selectLoginUser(account, password);
         session.setAttribute("loginUser",loginUser);
         return new ModelAndView("redirect:/home");
     }
@@ -117,9 +108,10 @@ public class ForumController {
         session.invalidate();
 
         //ログイン画面へフォワード処理
-        mav.setViewName("/");
+        //mav.setViewName("/");
         //return new ModelAndView("/");
-        return mav;
+        //return mav;
+        return new ModelAndView("redirect:/");
     }
 
 }
