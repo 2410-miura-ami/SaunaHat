@@ -19,7 +19,30 @@
         </form>
     </div>
 </div>
-
+<!-- ログアウトボタン　-->
+<!-- ユーザ管理画面への遷移ボタン　-->
+<!-- 絞り込み　-->
+<!-- ログアウトボタン　-->
+<div class="message" th:each="message : ${formModel}">
+    <div class="message-icon">
+        <div class="name">
+            投稿者名 : <span th:text="${message.userName}"/>
+        </div>
+        <div class="category">
+            カテゴリ : <span th:text="${message.category}"/>
+        </div>
+        <div class="createdDate">
+            投稿日 : <span th:text="${#dates.format(message.createdDate, 'yyyy年MM月dd日')}"/>
+        </div>
+        <div class="title">
+            タイトル : <span th:text="${message.title}"/>
+        </div>
+        <div class="text">
+            本文<br/>
+            <span th:text="${message.text}"/>
+        </div>
+    </div><br/>
+</div>
 </body>
 </html>
 
