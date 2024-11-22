@@ -72,6 +72,14 @@ public class ForumController {
     public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
+        //ログインユーザの部署チェック
+        //セッションからログインユーザ情報を取得
+        UserForm userForm = (UserForm)session.getAttribute("loginUser");
+        //Formから部署IDを取り出す
+        int departmentId = userForm.getDepartmentId();
+        //ユーザ情報から取得した部署IDを画面にセット
+        mav.addObject("departmentId", departmentId);
+
         //投稿の表示
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);

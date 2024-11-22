@@ -10,9 +10,11 @@
     <h1>掲示板</h1>
 
     <div class="header">
-        <form th:action="@{/userManage}" method="get" class="header-item">
-            <button type="submit">ユーザー管理</button>
-        </form>
+        <div th:if="${departmentId == 1}">
+            <form th:action="@{/userManage}" method="get" class="header-item">
+                <button type="submit">ユーザー管理</button>
+            </form>
+        </div>
         <form th:action="@{/logout}" method="get" class="header-item">
             <button type="submit">ログアウト</button>
         </form>

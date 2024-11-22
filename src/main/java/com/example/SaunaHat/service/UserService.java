@@ -36,7 +36,7 @@ public class UserService {
             user.setPassword(result.getPassword());
             user.setName(result.getName());
             //user.setBranchId(result.getBranchId());
-            //user.setDepartmentId(result.getDepartmentId());
+            user.setDepartmentId(result.getDepartment().getId());
             user.setIsStopped(result.getIsStopped());
             user.setBranchName(result.getBranch().getName());
             user.setDepartmentName(result.getDepartment().getName());
