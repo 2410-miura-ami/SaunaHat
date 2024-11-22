@@ -24,25 +24,48 @@ public class MessageService {
      * レコード全件取得処理
      */
     public List<MessageForm> findAllMessage(String startDate, String endDate, String category) {
-        //日時の絞り込みの入力チェック
-        if(startDate.isBlank()){
+        //絞り込み開始日の入力チェック
+        if(StringUtils.isBlank(startDate)){
             //開始日の入力がない場合はデフォルト値をセット
             startDate = "2022-01-01 00:00:00";
         }else{
             //開始日の入力があった場合は時間部分をセット
-            startDate = startDate + "00:00:00";
+            startDate = startDate + " 00:00:00";
         }
+        //絞り込み終了日の入力チェック
+        if(StringUtils.isBlank(endDate)){
+            //終了日の入力がない場合は現在日時をセット
+            Date date = new Date();
+            endDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+            endDate = endDate + " 23:59:59";
+        }else{
+            //終了日の入力があった場合は時間部分をセット
+            endDate = endDate + " 23:59:59";
+        }
+        //startDateとendDateをDate型に変換
+        Date StartDate = null;
+        Date EndDate = null;
+        try {
+            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            StartDate = sdFormat.parse(startDate);
+            EndDate = sdFormat.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //空のEntityリストを用意
+        List<Message> results;
         //カテゴリの絞り込み入力チェック
-        if(category.isBlank()){
-            
+        if(StringUtils.isBlank(category)){
+            //カテゴリの絞り込みなしでセレクト
+            results = messageRepository.selectMessage(StartDate, EndDate);
+        }else{
+            //カテゴリの絞り込みありでセレクト
+            results = messageRepository.selectMessageByCategory(StartDate, EndDate, category);
         }
-
-
-        //repositoryを呼び出して、戻り値をEntityとして受け取る
-        List<Message> results = messageRepository.selectMessage();
+        //EntityからFormに詰め替え
         List<MessageForm> reports = setMessageForm(results);
         return reports;
-
 
     }
 

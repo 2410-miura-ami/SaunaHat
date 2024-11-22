@@ -76,6 +76,11 @@ public class ForumController {
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
 
+        //絞り込み情報を画面にセット
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("category", category);
+
         //取得した情報を画面にバインド
         mav.addObject("formModel", messages);
 
