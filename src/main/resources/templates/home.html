@@ -52,6 +52,11 @@
         <input type="submit" value="コメント"/>
     </form>
 </div>
+<div class="comments" th:each="comment:${comments}">
+    <div th:if="${comment.messageId == message.id}">
+        <span th:text="${comment.text"/></br>
+    </div>
+</div>
 </body>
 </html>
 

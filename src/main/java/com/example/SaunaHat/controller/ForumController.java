@@ -1,5 +1,6 @@
 package com.example.SaunaHat.controller;
 
+import com.example.SaunaHat.controller.form.CommentForm;
 import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.service.MessageService;
@@ -111,7 +112,8 @@ public class ForumController {
         //投稿の表示
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
-
+        //返信の表示
+        //List<CommentForm> comments = commentService.findAllComment();
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
