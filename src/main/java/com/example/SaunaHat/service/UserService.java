@@ -21,6 +21,10 @@ public class UserService {
         // パスワード暗号化
         //String encPassword = CipherUtil.encrypt(password);
         List<User> results = userRepository.selectUser(account, password);
+        if (results.size() == 0) {
+            return null;
+        }
+        //フォームに詰める
         List<UserForm> users = setUserForm(results);
         return users.get(0);
     }
