@@ -16,10 +16,10 @@
   <form th:action="loginUser" th:method="get" th:object="${formModel}">
 
     <label class="account">アカウント名</label>
-    <input name="account" th:field="*{account}" /><br/>
+    <input name="account" th:id="account" /><br/>
 
     <label class="password">パスワード</label>
-    <input name="password" th:field="*{password}"/><br/>
+    <input name="password" type="password" th:id="password"/><br/>
 
     <input type="submit" value="ログイン" /> <br />
 

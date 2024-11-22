@@ -48,11 +48,18 @@ public class ForumController {
     }
 
     /*
-     * ログイン処理
-     */
-    @GetMapping("/loginUser")
+     * ログイン処理　ModelAttributeバージョンを念のため残します
+     @GetMapping("/loginUser")
     public ModelAndView select(@ModelAttribute(name = "formModel") UserForm userForm){
         UserForm loginUser = userService.selectLoginUser(userForm);
+        session.setAttribute("loginUser",loginUser);
+        return new ModelAndView("redirect:/home");
+    }
+     */
+    @GetMapping("/loginUser")
+    public ModelAndView select(@RequestParam(name = "account") String account,
+                               @RequestParam(name = "password") String password){
+        UserForm loginUser = userService.selectLoginUser(account, password);
         session.setAttribute("loginUser",loginUser);
         return new ModelAndView("redirect:/home");
     }
@@ -105,18 +112,21 @@ public class ForumController {
     public ModelAndView logout() {
 
         ModelAndView mav = new ModelAndView();
-        //空のFormを作成
+        /*空のFormを作成(ログイン画面への遷移formModel追加バージョンも念のため残します)
         UserForm userForm = new UserForm();
 
         // Formをバインド先にセット
         mav.addObject("formModel", userForm);
-        
+        */
+
         // セッションの無効化
         session.invalidate();
 
+        /*
         if(session.getAttribute("loginUser") == null){
             System.out.println("ログインユーザーのセッションが破棄されました。");
         }
+        */
 
         //ログイン画面へフォワード処理
         mav.setViewName("/login");

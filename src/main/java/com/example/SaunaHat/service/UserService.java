@@ -17,11 +17,9 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public UserForm selectLoginUser(UserForm userForm){
+    public UserForm selectLoginUser(String account, String password){
         // パスワード暗号化
         //String encPassword = CipherUtil.encrypt(password);
-        String account = userForm.getAccount();
-        String password = userForm.getPassword();
         List<User> results = userRepository.selectUser(account, password);
         List<UserForm> users = setUserForm(results);
         return users.get(0);
@@ -37,9 +35,11 @@ public class UserService {
             user.setAccount(result.getAccount());
             user.setPassword(result.getPassword());
             user.setName(result.getName());
-            user.setBranchId(result.getBranchId());
-            user.setDepartmentId(result.getDepartmentId());
+            //user.setBranchId(result.getBranchId());
+            //user.setDepartmentId(result.getDepartmentId());
             user.setIsStopped(result.getIsStopped());
+            user.setBranchName(result.getBranch().getName());
+            user.setDepartmentName(result.getDepartment().getName());
             user.setCreatedDate(result.getCreatedDate());
             user.setUpdatedDate(result.getUpdatedDate());
             users.add(user);
@@ -51,7 +51,8 @@ public class UserService {
      *ユーザー管理画面表示（ユーザー取得）
      */
     public List<UserForm> findAllUser(){
-        List<User> results = userRepository.findAll();
+        //repositoryを呼び出して、戻り値をEntityとして受け取る
+        List<User> results = userRepository.selectUser();
         List<UserForm> users = setUserForm(results);
         return users;
     }
