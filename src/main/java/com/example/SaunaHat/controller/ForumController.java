@@ -4,6 +4,7 @@ import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +62,33 @@ public class ForumController {
     @GetMapping("/loginUser")
     public ModelAndView select(@RequestParam(name = "account") String account,
                                @RequestParam(name = "password") String password){
+        //バリデーション
+        List<String> errorMessages = new ArrayList<String>();
+        if (StringUtils.isBlank(account)){
+            errorMessages.add("アカウントを入力してください");
+        }
+        if (StringUtils.isBlank(password)){
+            errorMessages.add("パスワードを入力してください");
+        }
+        if (errorMessages.size() != 0){
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("errorMessages", errorMessages);
+            mav.setViewName("/login");
+            return mav;
+        }
+        //ログインユーザ情報取得処理
         UserForm loginUser = userService.selectLoginUser(account, password);
+        //バリデーション　ユーザが存在しないか停止中ならログイン失敗
+        if (loginUser == null || loginUser.getIsStopped() == 1){
+            errorMessages.add("ログインに失敗しました");
+        }
+        if (errorMessages.size() != 0){
+            ModelAndView mav = new ModelAndView();
+            mav.addObject("errorMessages", errorMessages);
+            mav.setViewName("/login");
+            return mav;
+        }
+        //セッションにログインユーザ情報を詰める
         session.setAttribute("loginUser",loginUser);
         return new ModelAndView("redirect:/home");
     }
