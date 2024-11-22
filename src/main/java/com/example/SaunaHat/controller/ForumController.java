@@ -117,7 +117,7 @@ public class ForumController {
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
         //返信の表示
-        //List<CommentForm> comments = commentService.findAllComment();
+        List<CommentForm> comments = commentService.findAllComment();
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
@@ -125,6 +125,7 @@ public class ForumController {
 
         //取得した情報を画面にバインド
         mav.addObject("formModel", messages);
+        mav.addObject("comments", comments);
 
         // 画面遷移先を指定
         mav.setViewName("/home");
@@ -132,6 +133,36 @@ public class ForumController {
         //画面に遷移
         return mav;
     }
+
+    /*
+     *コメント登録処理
+     */
+    @PostMapping("/comment/{id}")
+    public ModelAndView comment(@PathVariable int messageId, @ModelAttribute("formModel")@Validated CommentForm commentForm) {
+        ModelAndView mav = new ModelAndView();
+
+        //セッションからユーザIDを取得
+        int userId = ((CommentForm)session.getAttribute("loginUser")).getUserId();
+        //取得した投稿IDとユーザIDをFormにセット
+        commentForm.setMessageId(messageId);
+        commentForm.setUserId(userId);
+
+        //投稿のIDを引数にinsertする
+        commentService.addComment(commentForm);
+
+        //取得した情報を画面にバインド
+        mav.addObject("formModel", commentForm);
+
+        // 画面遷移先を指定
+        mav.setViewName("redirect:/home");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *コメント削除処理
+     */
 
     /*
      *ユーザー管理画面表示処理
@@ -151,6 +182,25 @@ public class ForumController {
 
         //画面に遷移
         return mav;
+    }
+
+    /*
+     *アカウント停止・復活処理
+     */
+    @GetMapping("/accountStop/{isStoppedId}")
+    public ModelAndView accountStop(@PathVariable Integer isStoppedId, @RequestParam(name = "userId")Integer userId) {
+        ModelAndView mav = new ModelAndView();
+
+        if(isStoppedId == 0) {
+            isStoppedId = 1;
+        } else if (isStoppedId == 1) {
+            isStoppedId = 0;
+        }
+        //ユーザ復活停止状態を更新
+        userService.editIsStopped(isStoppedId, userId);
+
+        //ユーザ管理画面へリダイレクト
+        return new ModelAndView("redirect:/userManage");
     }
 
     /*
@@ -179,32 +229,6 @@ public class ForumController {
         //ログイン画面へフォワード処理
         mav.setViewName("/login");
         //return new ModelAndView("./");
-        return mav;
-    }
-
-    /*
-     *コメント登録処理
-     */
-    @PostMapping("/comment/{id}")
-    public ModelAndView comment(@PathVariable int messageId, @ModelAttribute("formModel")@Validated CommentForm commentForm) {
-        ModelAndView mav = new ModelAndView();
-
-        //セッションからユーザIDを取得
-        int userId = ((CommentForm)session.getAttribute("loginUser")).getUserId();
-        //取得した投稿IDとユーザIDをFormにセット
-        commentForm.setMessageId(messageId);
-        commentForm.setUserId(userId);
-
-        //投稿のIDを引数にinsertする
-        commentService.addComment(commentForm);
-
-        //取得した情報を画面にバインド
-        mav.addObject("formModel", commentForm);
-
-        // 画面遷移先を指定
-        mav.setViewName("redirect:/home");
-
-        //画面に遷移
         return mav;
     }
 

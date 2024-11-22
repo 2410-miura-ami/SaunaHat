@@ -47,7 +47,12 @@
         </div>
         <div class="comments" th:each="comment:${comments}">
             <div th:if="${comment.messageId == message.id}">
-                <span th:text="${comment.text"/></br>
+                <div class="userName">
+                    コメント者名：<span th:text="${comment.userName}"/>
+                </div>
+                <div class="commentText">
+                    コメント：<span th:text="${comment.text}"/></br>
+                </div>
             </div>
         </div>
         <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${formModel}">

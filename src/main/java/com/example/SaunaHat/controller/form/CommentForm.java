@@ -19,4 +19,8 @@ public class CommentForm {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String userName;
+
+    private String userAccount;
 }
