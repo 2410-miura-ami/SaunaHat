@@ -106,6 +106,26 @@ public class ForumController {
     }
 
     /*
+     *アカウント停止・復活処理
+     */
+    @PutMapping("/accountStop/{id}")
+    public ModelAndView accountStop(@PathVariable Integer id, @RequestParam(name = "userId")String userId) {
+        ModelAndView mav = new ModelAndView();
+
+        //ユーザ復活停止状態を更新
+
+        // ユーザーを全件取得
+        List<UserForm> userData = userService.findAllUser();
+
+        //ユーザーデータオブジェクトを保管
+        mav.addObject("users", userData);
+
+
+        //ユーザ管理画面へリダイレクト
+        return new ModelAndView("redirect:/userManage");
+    }
+
+    /*
      *ログアウト処理
      */
     @GetMapping("/logout")
