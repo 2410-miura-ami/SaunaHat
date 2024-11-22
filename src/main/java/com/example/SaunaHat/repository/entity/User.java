@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 public class User {
+
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +43,8 @@ public class User {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
+
+    //Messageと一対多でリレーションを形成
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> messages;
 }

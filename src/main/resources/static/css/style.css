@@ -25,6 +25,31 @@ body {
 	width: 80%;
 }
 
+.message-icon {
+    background-color: white;
+    border: 0.5px solid black;
+}
+
+.name, .category {
+    display: inline-block;
+    width: 15%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.createdDate {
+    font-size: 12px;
+    color: silver;
+}
+
+.title {
+    font-weight: bold;
+}
+
+.text {
+    font-size: 12px;
+}
+
 .user-list {
     background-color : #fff;
     border-collapse: collapse;

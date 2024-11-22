@@ -1,6 +1,8 @@
 package com.example.SaunaHat.controller;
 
+import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +17,14 @@ import java.util.List;
 
 @Controller
 public class ForumController {
-    //@Autowired
-    //MessageService messageService;
 
     @Autowired
     HttpSession session;
-
+    @Autowired
+    MessageService messageService;
     @Autowired
     UserService userService;
+
 
     /*
      * ログイン画面表示処理？
@@ -44,6 +46,7 @@ public class ForumController {
         }
         return mav;
     }
+
     /*
      * ログイン処理
      */
@@ -55,11 +58,18 @@ public class ForumController {
     }
 
     /*
-     * ホーム画面表示処理
+     * ホーム画面・投稿表示処理
      */
     @GetMapping("/home")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
+
+        //投稿の表示
+        //投稿を全件取得
+        List<MessageForm> messages = messageService.findAllMessage();
+
+        //取得した情報を画面にバインド
+        mav.addObject("formModel", messages);
 
         // 画面遷移先を指定
         mav.setViewName("/home");
@@ -95,12 +105,12 @@ public class ForumController {
     public ModelAndView logout() {
 
         ModelAndView mav = new ModelAndView();
-
-        // form用の空のentityを準備
+        //空のFormを作成
         UserForm userForm = new UserForm();
 
-        // 準備した空のFormを保管
+        // Formをバインド先にセット
         mav.addObject("formModel", userForm);
+
 
         // セッションの無効化
         session.invalidate();
@@ -110,7 +120,7 @@ public class ForumController {
         }
 
         //ログイン画面へフォワード処理
-        mav.setViewName("login");
+        mav.setViewName("/login");
         //return new ModelAndView("./");
         return mav;
     }
