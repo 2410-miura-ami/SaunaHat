@@ -19,8 +19,10 @@ public class Comment {
     @Column
     private String text;
 
-    @Column
-    private int userId;
+    //Userと多対一でリレーションを形成
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column
     private int messageId;

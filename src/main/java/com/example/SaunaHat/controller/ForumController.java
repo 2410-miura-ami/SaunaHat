@@ -3,6 +3,7 @@ package com.example.SaunaHat.controller;
 import com.example.SaunaHat.controller.form.CommentForm;
 import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.service.CommentService;
 import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
 import io.micrometer.common.util.StringUtils;
@@ -28,6 +29,8 @@ public class ForumController {
     MessageService messageService;
     @Autowired
     UserService userService;
+    @Autowired
+    CommentService commentService;
 
 
     /*
@@ -105,7 +108,7 @@ public class ForumController {
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
         //返信の表示
-        //List<CommentForm> comments = commentService.findAllComment();
+        List<CommentForm> comments = commentService.findAllComment();
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
@@ -113,6 +116,7 @@ public class ForumController {
 
         //取得した情報を画面にバインド
         mav.addObject("formModel", messages);
+        mav.addObject("comments", comments);
 
         // 画面遷移先を指定
         mav.setViewName("/home");
