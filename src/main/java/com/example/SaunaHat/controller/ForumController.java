@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -27,7 +28,7 @@ public class ForumController {
     
 
     /*
-     * ログイン画面表示処理？
+     * ログイン画面表示処理
      */
     @GetMapping
     public ModelAndView login(){
@@ -61,12 +62,12 @@ public class ForumController {
      * ホーム画面・投稿表示処理
      */
     @GetMapping("/home")
-    public ModelAndView home() {
+    public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
         //投稿の表示
-        //投稿を全件取得
-        List<MessageForm> messages = messageService.findAllMessage();
+        //投稿を全件取得(引数に絞り込み情報をセット)
+        List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
 
         //取得した情報を画面にバインド
         mav.addObject("formModel", messages);

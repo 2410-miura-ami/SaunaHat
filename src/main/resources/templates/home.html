@@ -19,10 +19,13 @@
         </form>
     </div>
 </div>
-<!-- ログアウトボタン　-->
-<!-- ユーザ管理画面への遷移ボタン　-->
-<!-- 絞り込み　-->
-<!-- ログアウトボタン　-->
+<div class="narrowDown-button">
+    <form th:method="get">
+        <input type="date" name="startDate" th:value="${startDate}" />～<input type="date" name="endDate" th:value="${endDate}" />
+        <input type="text" name="category" th:value="${category}">
+        <input type="submit" value="絞込" />
+    </form>
+</div>
 <div class="message" th:each="message : ${formModel}">
     <div class="message-icon">
         <div class="name">
