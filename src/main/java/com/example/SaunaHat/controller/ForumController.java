@@ -96,12 +96,22 @@ public class ForumController {
 
         ModelAndView mav = new ModelAndView();
 
+        // form用の空のentityを準備
+        UserForm userForm = new UserForm();
+
+        // 準備した空のFormを保管
+        mav.addObject("formModel", userForm);
+
         // セッションの無効化
         session.invalidate();
 
+        if(session.getAttribute("loginUser") == null){
+            System.out.println("ログインユーザーのセッションが破棄されました。");
+        }
+
         //ログイン画面へフォワード処理
-        mav.setViewName("/");
-        //return new ModelAndView("/");
+        mav.setViewName("login");
+        //return new ModelAndView("./");
         return mav;
     }
 

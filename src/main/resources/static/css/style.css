@@ -25,6 +25,69 @@ body {
 	width: 80%;
 }
 
-.user-account .user-name {
+.user-list {
+    background-color : #fff;
+    border-collapse: collapse;
+    border : solid 1px #000;
+}
+
+.head-account {
+    display : inline-block;
+    font-weight : bold;
+    width : 200px;
+    padding-left : 10px;
+}
+
+.head-name {
+    display : inline-block;
+    font-weight : bold;
+    width : 200px;
+}
+
+.head-branch {
+    display : inline-block;
+    font-weight : bold;
+    width : 100px;
+}
+
+.head-department {
+    display : inline-block;
+    font-weight : bold;
+    width : 100px;
+}
+
+.head-accountStop {
+    display : inline-block;
+    font-weight : bold;
+    width : 150px;
+}
+
+.user-account {
+    display : inline-block;
+    width : 200px;
+    padding-left : 10px;
+}
+
+.user-name {
+    display : inline-block;
+    width : 200px;
+}
+
+.user-branch {
+    display : inline-block;
+    width : 100px;
+}
+
+.user-department {
+    display : inline-block;
+    width : 100px;
+}
+
+.user-accountStop {
+     display : inline-block;
+     width : 150px;
+ }
+
+.edit-button {
     display : inline-block;
 }
