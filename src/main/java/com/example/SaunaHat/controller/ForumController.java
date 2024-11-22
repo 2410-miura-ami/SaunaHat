@@ -144,18 +144,17 @@ public class ForumController {
     /*
      *アカウント停止・復活処理
      */
-    @PutMapping("/accountStop/{id}")
-    public ModelAndView accountStop(@PathVariable Integer id, @RequestParam(name = "userId")String userId) {
+    @GetMapping("/accountStop/{isStoppedId}")
+    public ModelAndView accountStop(@PathVariable Integer isStoppedId, @RequestParam(name = "userId")Integer userId) {
         ModelAndView mav = new ModelAndView();
 
+        if(isStoppedId == 0) {
+            isStoppedId = 1;
+        } else if (isStoppedId == 1) {
+            isStoppedId = 0;
+        }
         //ユーザ復活停止状態を更新
-
-        // ユーザーを全件取得
-        List<UserForm> userData = userService.findAllUser();
-
-        //ユーザーデータオブジェクトを保管
-        mav.addObject("users", userData);
-
+        userService.editIsStopped(isStoppedId, userId);
 
         //ユーザ管理画面へリダイレクト
         return new ModelAndView("redirect:/userManage");

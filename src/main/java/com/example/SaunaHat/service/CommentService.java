@@ -14,10 +14,10 @@ public class CommentService {
     @Autowired
     CommentRepository commentRepository;
     //コメント表示処理
-    public List<CommentForm> findAllComment(){
+   /* public List<CommentForm> findAllComment(){
         List<Comment> results = commentRepository.findAllComment();
         //EntityからFormに詰め替え
         List<CommentForm> comments = setCommentForm(results);
         return reports;
-    }
+    }*/
 }
