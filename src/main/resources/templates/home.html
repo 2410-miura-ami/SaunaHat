@@ -43,12 +43,17 @@
             本文<br/>
             <span th:text="${message.text}"/>
         </div>
+        <div class="comments" th:each="comment:${comments}">
+            <div th:if="${comment.messageId == message.id}">
+                <div class="userName">
+                    コメント者名：<span th:text="${comment.userName}"/>
+                </div>
+                <div class="commentText">
+                    コメント：<span th:text="${comment.text}"/></br>
+                </div>
+            </div>
+        </div>
     </div><br/>
-</div>
-<div class="comments" th:each="comment:${comments}">
-    <div th:if="${comment.messageId == message.id}">
-        <span th:text="${comment.text"/></br>
-    </div>
 </div>
 </body>
 </html>
