@@ -113,7 +113,6 @@ public class ForumController {
         // 画面遷移先を指定
         mav.setViewName("/login");
 
-
         // セッションの無効化
         session.invalidate();
 

@@ -18,4 +18,11 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Query(value = "SELECT m FROM Message m JOIN FETCH m.user u ORDER BY m.createdDate DESC")
     public List<Message> selectMessage();
 
+    //nativeQueryを使った場合
+    /*@Query(value = "SELECT m.id AS id, m.title AS title, m.text AS text, m.category AS category, m.user_id AS user_id, u.name AS userName, u.account AS userAccount, m.created_date AS created_date, m.updated_date AS updated_date " +
+            "FROM messages m " +
+            "INNER JOIN users u ON m.user_id = u.id " +
+            "ORDER BY m.created_date DESC limit 100",
+            nativeQuery = true)*/
+
 }
