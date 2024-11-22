@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="styleSheet">
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/account-stop.js}"></script>
     <title>ユーザー管理</title>
 </head>
 <body>
@@ -35,7 +38,7 @@
 
             <span th:if="${user.isStopped} == 1">
                 <span class="stop-now">停止中</span>
-                <form class="isStopped-button" method="get" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
+                <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
                 	<input type="submit" value="復活" />
 			        <input name="userId" th:value="${user.id}" type="hidden" />
             	</form>
