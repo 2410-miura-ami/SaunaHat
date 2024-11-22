@@ -118,7 +118,7 @@ public class ForumController {
     public ModelAndView logout() {
 
         ModelAndView mav = new ModelAndView();
-        /*空のFormを作成
+        /*空のFormを作成(ログイン画面への遷移formModel追加バージョンも念のため残します)
         UserForm userForm = new UserForm();
 
         // Formをバインド先にセット
@@ -128,9 +128,11 @@ public class ForumController {
         // セッションの無効化
         session.invalidate();
 
+        /*
         if(session.getAttribute("loginUser") == null){
             System.out.println("ログインユーザーのセッションが破棄されました。");
         }
+        */
 
         //ログイン画面へフォワード処理
         mav.setViewName("/login");

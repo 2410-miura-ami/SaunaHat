@@ -27,11 +27,16 @@ public class User {
     @Column
     private String name;
 
-    @Column
-    private int branchId;
+    //管理画面表示
+    //Branchと多対一でリレーションを形成
+    @ManyToOne
+    @JoinColumn(name="branch_id")
+    private Branch branch;
 
-    @Column
-    private int departmentId;
+    //Departmentと多対一でリレーションを形成
+    @ManyToOne
+    @JoinColumn(name="department_id")
+    private Department department;
 
     @Column
     private int isStopped;
@@ -47,4 +52,5 @@ public class User {
     //Messageと一対多でリレーションを形成
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages;
+
 }
