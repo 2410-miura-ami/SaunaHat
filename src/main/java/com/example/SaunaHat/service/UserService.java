@@ -20,7 +20,14 @@ public class UserService {
     public UserForm selectLoginUser(String account, String password){
         // パスワード暗号化
         //String encPassword = CipherUtil.encrypt(password);
+
+        //ログインユーザ情報取得
         List<User> results = userRepository.selectUser(account, password);
+        //存在しないアカウントの場合nullを返す
+        if (results.size() == 0) {
+            return null;
+        }
+        //フォームに詰める
         List<UserForm> users = setUserForm(results);
         return users.get(0);
     }
