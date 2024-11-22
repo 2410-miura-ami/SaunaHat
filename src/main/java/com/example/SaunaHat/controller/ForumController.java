@@ -110,8 +110,7 @@ public class ForumController {
 
         // Formをバインド先にセット
         mav.addObject("formModel", userForm);
-
-
+        
         // セッションの無効化
         session.invalidate();
 
