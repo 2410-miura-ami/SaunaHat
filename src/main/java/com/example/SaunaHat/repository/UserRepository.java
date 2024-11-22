@@ -1,5 +1,6 @@
 package com.example.SaunaHat.repository;
 
+import com.example.SaunaHat.repository.entity.Message;
 import com.example.SaunaHat.repository.entity.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,19 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "SELECT * FROM users WHERE account = :account AND password =  :password", nativeQuery = true)
     public List<User> selectUser(@Param("account") String account, @Param("password")String password);
+
+    /*
+    @Transactional
+    @Query(value = "SELECT m FROM Message m JOIN FETCH m.user u ORDER BY m.createdDate DESC")
+    public List<Message> selectMessage();
+    */
+
+    //nativeQueryを使った場合
+    @Query(value = "SELECT u.id AS id, u.account AS account, u.password AS password, u.name AS name, u.branch_id AS branch_id, u.department_id AS department_id, u.is_stopped AS is_stopped, b.name AS branchName, d.name AS departmentName ,u.created_date AS created_date, u.updated_date AS updated_date " +
+            "FROM users u " +
+            "INNER JOIN branches b ON u.branch_id = b.id " +
+            "INNER JOIN departments d ON u.department_id = d.id " ,
+            //"ORDER BY u.id ASC limit 100",
+            nativeQuery = true)
+    public List<User> selectUser();
 }

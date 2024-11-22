@@ -20,10 +20,11 @@
     <div class="user-list" th:each="user : ${users}">
         <div class="user-account" th:text="${user.account}"></div>
         <div class="user-name" th:text="${user.name}"></div>
-        <div class="user-branch" th:text="${user.branchId}"></div>
-        <div class="user-department" th:text="${user.departmentId}"></div>
+        <div class="user-branch" th:text="${user.branchName}"></div>
+        <div class="user-department" th:text="${user.departmentName}"></div>
 
         <!--アカウントの停止情報条件分岐0:稼働状態、1:停止状態-->
+        <div class="user-accountStop" th:text="${user.isStopped}"></div>
 
         <div class="edit-button">
             <!--<form th:method="get" th:action="@{/edit/{id}(id=${user.id})" >-->

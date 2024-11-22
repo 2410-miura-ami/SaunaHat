@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -29,7 +30,7 @@ public class ForumController {
 
 
     /*
-     * ログイン画面表示処理？
+     * ログイン画面表示処理
      */
     @GetMapping
     public ModelAndView login(){
@@ -75,9 +76,9 @@ public class ForumController {
             mav.setViewName("/login");
             return mav;
         }
-        //アカウント名とパスワードからログインユーザ情報を引っ張ってくる
+        //ログインユーザ情報取得処理
         UserForm loginUser = userService.selectLoginUser(account, password);
-        //バリデーション　ユーザが存在しないか停止状態ならログイン失敗
+        //バリデーション　ユーザが存在しないか停止中ならログイン失敗
         if (loginUser == null || loginUser.getIsStopped() == 1){
             errorMessages.add("ログインに失敗しました");
         }
@@ -87,9 +88,8 @@ public class ForumController {
             mav.setViewName("/login");
             return mav;
         }
-        //ログインユーザ情報をセッションに詰める
+        //セッションにログインユーザ情報を詰める
         session.setAttribute("loginUser",loginUser);
-        //ホームにリダイレクト
         return new ModelAndView("redirect:/home");
     }
 
@@ -97,12 +97,17 @@ public class ForumController {
      * ホーム画面・投稿表示処理
      */
     @GetMapping("/home")
-    public ModelAndView home() {
+    public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
         //投稿の表示
-        //投稿を全件取得
-        List<MessageForm> messages = messageService.findAllMessage();
+        //投稿を全件取得(引数に絞り込み情報をセット)
+        List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
+
+        //絞り込み情報を画面にセット
+        mav.addObject("startDate", startDate);
+        mav.addObject("endDate", endDate);
+        mav.addObject("category", category);
 
         //取得した情報を画面にバインド
         mav.addObject("formModel", messages);
@@ -141,7 +146,7 @@ public class ForumController {
     public ModelAndView logout() {
 
         ModelAndView mav = new ModelAndView();
-        /*空のFormを作成
+        /*空のFormを作成(ログイン画面への遷移formModel追加バージョンも念のため残します)
         UserForm userForm = new UserForm();
 
         // Formをバインド先にセット
@@ -151,9 +156,11 @@ public class ForumController {
         // セッションの無効化
         session.invalidate();
 
+        /*
         if(session.getAttribute("loginUser") == null){
             System.out.println("ログインユーザーのセッションが破棄されました。");
         }
+        */
 
         //ログイン画面へフォワード処理
         mav.setViewName("/login");
