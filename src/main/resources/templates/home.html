@@ -46,6 +46,11 @@
             <span th:text="${message.text}"/>
         </div>
     </div><br/>
+    <!--コメント表示-->
+    <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${formModel}">
+        <textarea th:field="*{text}" size="20" class="add-comment"/></textarea><br/>
+        <input type="submit" value="コメント"/>
+    </form>
 </div>
 </body>
 </html>
