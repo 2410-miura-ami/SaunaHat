@@ -69,6 +69,7 @@ public class CommentService {
         User user = new User();
         user.setId(commentForm.getUserId());
 
+        //投稿IDとテキストとUser型のユーザIDをComment型のEntityに詰める
         comment.setMessageId(commentForm.getMessageId());
         comment.setUser(user);
         comment.setText(commentForm.getText());

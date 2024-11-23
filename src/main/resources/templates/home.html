@@ -55,8 +55,8 @@
                 </div>
             </div>
         </div>
-        <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${formModel}">
-            <textarea th:field="${text}" size="20" class="add-comment"></textarea><br/>
+        <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}">
+            <textarea th:field="*{text}" size="20" class="add-comment"></textarea><br/>
             <input type="submit" value="コメント"/>
         </form>
     </div><br/>

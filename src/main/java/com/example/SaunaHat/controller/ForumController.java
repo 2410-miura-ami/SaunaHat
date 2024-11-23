@@ -105,6 +105,10 @@ public class ForumController {
     public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
+        //コメント投稿欄表示のためのバインド
+        CommentForm commentForm = new CommentForm();
+        mav.addObject("commentForm", commentForm);
+
         //ログインユーザの部署チェック
         //セッションからログインユーザ情報を取得
         UserForm userForm = (UserForm)session.getAttribute("loginUser");
@@ -138,12 +142,15 @@ public class ForumController {
      *コメント登録処理
      */
     @PostMapping("/comment/{id}")
-    public ModelAndView comment(@PathVariable int messageId, @ModelAttribute("formModel")@Validated CommentForm commentForm) {
+    public ModelAndView comment(@PathVariable("id") int messageId, @ModelAttribute("commentForm")CommentForm commentForm) {
         ModelAndView mav = new ModelAndView();
 
+        //コメント本文のバリデーション
+        //
+
         //セッションからユーザIDを取得
-        int userId = ((CommentForm)session.getAttribute("loginUser")).getUserId();
-        //取得した投稿IDとユーザIDをFormにセット
+        int userId = ((UserForm)session.getAttribute("loginUser")).getId();
+        //取得した情報をFormにセット
         commentForm.setMessageId(messageId);
         commentForm.setUserId(userId);
 
@@ -151,7 +158,7 @@ public class ForumController {
         commentService.addComment(commentForm);
 
         //取得した情報を画面にバインド
-        mav.addObject("formModel", commentForm);
+        mav.addObject("commentForm", commentForm);
 
         // 画面遷移先を指定
         mav.setViewName("redirect:/home");
