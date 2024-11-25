@@ -4,6 +4,7 @@ import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.repository.UserRepository;
 import com.example.SaunaHat.repository.entity.Branch;
 import com.example.SaunaHat.repository.entity.Department;
+import com.example.SaunaHat.repository.entity.Message;
 import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,10 @@ public class UserService {
         user.setName(reqUser.getName());
         user.setBranch(branch);
         user.setDepartment(department);
+
+        //Userエンティティにあるmessagesをセットする
+        List<Message> messages = new ArrayList<>();
+        user.setMessages(messages);
 
         Date nowDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

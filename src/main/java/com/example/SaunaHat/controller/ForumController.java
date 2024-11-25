@@ -319,6 +319,7 @@ public class ForumController {
     @PutMapping("/update/{id}")
     public ModelAndView updateUser(@PathVariable Integer id, @ModelAttribute("user") UserForm userForm, @RequestParam(name="branch") Integer branchId, @RequestParam(name="department") Integer departmentId){
         ModelAndView mav = new ModelAndView();
+        
 
         //パスワードの入力がない時、パスワード以外を更新
 
