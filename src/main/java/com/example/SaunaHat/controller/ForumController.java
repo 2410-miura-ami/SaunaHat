@@ -3,6 +3,7 @@ package com.example.SaunaHat.controller;
 import com.example.SaunaHat.controller.form.CommentForm;
 import com.example.SaunaHat.controller.form.MessageForm;
 import com.example.SaunaHat.controller.form.UserForm;
+import com.example.SaunaHat.repository.entity.Comment;
 import com.example.SaunaHat.service.CommentService;
 import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
@@ -12,16 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ForumController {
@@ -107,19 +104,88 @@ public class ForumController {
     public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
+        //ログインユーザの部署チェック
+        //セッションからログインユーザ情報を取得
+        UserForm userForm = (UserForm)session.getAttribute("loginUser");
+        //Formから部署IDを取り出す
+        int departmentId = userForm.getDepartmentId();
+        //ユーザ情報から取得した部署IDを画面にセット
+        mav.addObject("departmentId", departmentId);
+
         //投稿の表示
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
-        //返信の表示
-        List<CommentForm> comments = commentService.findAllComment();
+        //取得した投稿を画面にバインド
+        mav.addObject("formModel", messages);
+
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
         mav.addObject("category", category);
 
-        //取得した情報を画面にバインド
-        mav.addObject("formModel", messages);
+        //返信の表示
+        //返信の全件取得
+        List<CommentForm> comments = commentService.findAllComment();
+        //取得した返信を画面にバインド
         mav.addObject("comments", comments);
+
+        //セッションからログインユーザ情報取得しバインド
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        mav.addObject("loginUser", loginUser);
+
+        //コメントのエラーメッセージチェック
+        //セッションからエラーメッセージを取得して、有無をチェック
+        String errorMessage = (String)session.getAttribute("errorMessage");
+        if(errorMessage != null){
+            //エラーメッセージがあった場合はセッションからコメントフォームを取得
+            CommentForm commentForm = (CommentForm)session.getAttribute("commentForm");
+            //全てのテキストボックスに本文が出てしまうので、空白に置き換える
+            commentForm.setText("");
+
+            //エラーメッセージとコメントフォームを画面にセット
+            mav.addObject("errorMessage", errorMessage);
+            mav.addObject("commentForm", commentForm);
+
+            //エラーメッセージとコメントフォームのセッションを破棄
+            session.removeAttribute("errorMessage");
+            session.removeAttribute("commentForm");
+        }else {
+            //エラーメッセージがなかった場合は空のコメントフォームを画面にバインド
+            CommentForm commentForm = new CommentForm();
+            mav.addObject("commentForm", commentForm);
+        }
+
+        /*
+        //マップを使ってコメントフォームを投稿ごとに用意
+        //マップを準備
+        Map<Integer, CommentForm> commentForms = new HashMap<>();
+        for (MessageForm message : messages) {
+            //コメントフォームを準備
+            CommentForm commentForm = new CommentForm();
+            //各投稿のIDをコメントフォームにセット
+            commentForm.setMessageId(message.getId());
+            //マップに投稿IDと投稿IDの入ったコメントフォームをセット
+            commentForms.put(message.getId(), commentForm);
+
+        }
+
+        //セッションからエラーメッセージを取得
+        String errorMessages = (String)session.getAttribute("errorMessage");
+        //エラーメッセージがある場合は、下記の処理
+        if(errorMessages != null) {
+            //エラーメッセージがあるFormを区別して取得
+            CommentForm errorForm = (CommentForm) session.getAttribute("commentForm");
+            // エラー時のフォーム内容を更新
+            commentForms.put(errorForm.getMessageId(), errorForm);
+            mav.addObject("errorMessages", errorMessages);
+
+            //エラーメッセージとコメント本文のセッションを破棄
+            session.removeAttribute("errorMessage");
+            session.removeAttribute("commentForm");
+        }
+        //マップを使って用意したコメントフォームを画面にバインド
+        mav.addObject("commentForms", commentForms);
+        */
 
         // 画面遷移先を指定
         mav.setViewName("/home");
@@ -129,59 +195,62 @@ public class ForumController {
     }
 
     /*
-     * 新規投稿画面表示
+     *コメント登録処理
      */
-    @GetMapping("/new")
-    public ModelAndView newMessage() {
+    @PostMapping("/comment/{id}")
+    public ModelAndView comment(@PathVariable("id") int messageId, @ModelAttribute("commentForm")CommentForm commentForm, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
-        // 空のformを準備
-        MessageForm messageForm = new MessageForm();
+
+        //コメント本文のバリデーション
+        //エラーメッセージの準備
+        String errorMessage = null;
+        //コメントフォームから返信の本文を取得
+        String text = commentForm.getText();
+
+        //コメントがブランク、500文字を超えた場合にエラーメッセージをセット
+        if(StringUtils.isBlank(text)){
+            errorMessage = "メッセージを入力してください";
+        }else if(text.length() > 500){
+            errorMessage = "500文字内で入力してください";
+        }
+        //エラーメッセージが1つでもあった場合はエラーメッセージとコメント本文を画面にセット
+        if(!(errorMessage == null)){
+            //返信対象の投稿IDをFormにセット
+            commentForm.setMessageId(messageId);
+            session.setAttribute("commentForm", commentForm);
+            session.setAttribute("errorMessage", errorMessage);
+
+        }else {
+            //エラーメッセージが空の場合はコメント投稿処理を実行
+            //セッションからユーザIDを取得
+            int userId = ((UserForm) session.getAttribute("loginUser")).getId();
+            //取得した情報をFormにセット
+            commentForm.setMessageId(messageId);
+            commentForm.setUserId(userId);
+
+            //投稿のIDを引数にinsertする
+            commentService.addComment(commentForm);
+        }
+
         // 画面遷移先を指定
-        mav.setViewName("/new");
-        // 準備した空のFormを保管
-        mav.addObject("formModel", messageForm);
+        mav.setViewName("redirect:/home");
+
+        //画面に遷移
         return mav;
     }
 
     /*
-     *新規投稿処理
+     *コメント削除処理
      */
-    @PostMapping("/add")
-    public ModelAndView addTasks(@ModelAttribute("formModel") @Validated MessageForm messageForm, BindingResult result,
-                                 RedirectAttributes redirectAttributes, Model model){
-        //入力されたタスク内容を取得
-        String title = messageForm.getTitle();
-        String category = messageForm.getCategory();
-        String text = messageForm.getText();
-        //エラーメッセージの準備
-        List<String> errorMessages = new ArrayList<>();
-        //タスク内容がブランクの場合
-        if (title.isBlank()) {
-            // エラーメッセージをセット
-            errorMessages.add("・件名を入力してください");
-        }
-        if (category.isBlank()) {
-            // エラーメッセージをセット
-            errorMessages.add("・カテゴリを入力してください");
-        }
-        if (text.isBlank()) {
-            // エラーメッセージをセット
-            errorMessages.add("・本文を入力してください");
-        }
-        for (FieldError error : result.getFieldErrors()){
-            String message = error.getDefaultMessage();
-            //取得したエラーメッセージをエラーメッセージのリストに格納
-            errorMessages.add(message);
-        }
-        if(!errorMessages.isEmpty()) {
-            model.addAttribute("errorMessages", errorMessages);
-            return new ModelAndView("/new");
-        }
-        //セッションからログイン情報取得
-        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
-        // 投稿をテーブルに格納
-        messageService.saveMessage(messageForm, loginUser);
-        // rootへリダイレクト
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/delete/{id}")
+    public ModelAndView deleteContent(@PathVariable Integer id) {
+        //投稿を削除する
+        messageService.deleteMessage(id);
+        //投稿をテーブルから削除した後、トップ画面へ戻る
         return new ModelAndView("redirect:/home");
     }
 

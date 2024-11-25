@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="styleSheet">
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/delete-message.js}"></script>
     <title>HOME</title>
 </head>
 <body>
@@ -10,9 +13,11 @@
     <h1>掲示板</h1>
 
     <div class="header">
-        <form th:action="@{/userManage}" method="get" class="header-item">
-            <button type="submit">ユーザー管理</button>
-        </form>
+        <div th:if="${departmentId == 1}">
+            <form th:action="@{/userManage}" method="get" class="header-item">
+                <button type="submit">ユーザー管理</button>
+            </form>
+        </div>
         <form th:action="@{/logout}" method="get" class="header-item">
             <button type="submit">ログアウト</button>
         </form>
@@ -46,16 +51,33 @@
             本文<br/>
             <span th:text="${message.text}"/>
         </div>
+        <div class="delete-button" th:each="loginUser:${loginUser}" th:if="${message.userAccount == loginUser.account}">
+            <form th:method="delete" th:action="@{/delete/{id}(id=${message.id})}" >
+                <input type="submit" value="削除" class="delete" />
+            </form>
+        </div>
+        </div>
         <div class="comments" th:each="comment:${comments}">
             <div th:if="${comment.messageId == message.id}">
-                <div class="userName">
+                <div class="name">
                     コメント者名：<span th:text="${comment.userName}"/>
                 </div>
-                <div class="commentText">
+                <div class="text">
                     コメント：<span th:text="${comment.text}"/></br>
                 </div>
             </div>
         </div>
+        <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}">
+            <div class="errorMessages">
+                <div th:if="${errorMessage != null}">
+                    <div th:if="${message.id == commentForm.messageId}" >
+                        <span th:text="${errorMessage}"/>
+                    </div>
+                </div>
+                <textarea th:field="*{text}" class="add-comment" ></textarea><br/>
+                <input type="submit" value="コメント"/>
+            </div>
+        </form>
     </div><br/>
 </div>
 </body>

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class MessageForm {
 
-    private int id;
+    private Integer id;
 
     @Size(max = 30, message = "・件名は30文字以内で入力してください")
     private String title;

@@ -28,7 +28,7 @@ public class Comment {
     private int messageId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", insertable = true, updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)

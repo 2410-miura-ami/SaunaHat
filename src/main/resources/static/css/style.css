@@ -156,3 +156,14 @@ body {
     font-weight : bold;
         width : 100px;
 }
+.delete-button{
+    display : inline-block;
+}
+.delete{
+    border-color : red;
+    color : red;
+}
+
+.errorMessages {
+     color: red;
+}
