@@ -10,13 +10,20 @@
   <h2>新規投稿</h2>
 </div>
 <div class="main-contents">
-  <form th:object="${formModel}"> <!--method="post" action="/add"-->
+  <form method="post" action="/add" th:object="${formModel}">
     <div class="form-area">
-      <label>投稿内容</label>
       <div th:each="errorMessage : ${errorMessages}">
         <span th:text="${errorMessage}"></br></span>
       </div>
-      <textarea class="tweet-box" th:field="*{text}" size="20" maxlength="200" /></textarea><br/>
+      <div class="new-title">タイトル
+        <textarea class="new-box" th:field="*{title}" size="20" maxlength="200" /></textarea><br/>
+      </div>
+      <div class="new-category">カテゴリー
+        <textarea class="new-box" th:field="*{category}" size="20" maxlength="200" /></textarea><br/>
+      </div>
+      <div class="new-text">本文
+        <textarea class="new-box" th:field="*{text}" size="100" maxlength="500" /></textarea><br/>
+      </div>
       <input type="submit" value="投稿" />
     </div>
   </form>

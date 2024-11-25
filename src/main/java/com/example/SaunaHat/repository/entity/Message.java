@@ -32,7 +32,7 @@ public class Message {
     private User user;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", insertable = true, updatable = false)
+    @Column(name = "created_date", insertable = false, updatable = false)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
