@@ -125,3 +125,19 @@ body {
     color : red;
     opacity : 0.7;
 }
+
+.edit-items {
+    font-weight : bold;
+}
+
+.edit-items input {
+    width : 200px;
+}
+.head-edit-item {
+    width : 160px;
+    display : inline-block;
+}
+
+.updateUser-button {
+    margin : 10px 0 10px 0;
+ }

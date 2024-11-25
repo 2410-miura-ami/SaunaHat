@@ -42,8 +42,8 @@ public class UserService {
             user.setAccount(result.getAccount());
             user.setPassword(result.getPassword());
             user.setName(result.getName());
-            //user.setBranchId(result.getBranchId());
-            //user.setDepartmentId(result.getDepartmentId());
+            user.setBranchId(result.getBranch().getId());
+            user.setDepartmentId(result.getDepartment().getId());
             user.setIsStopped(result.getIsStopped());
             user.setBranchName(result.getBranch().getName());
             user.setDepartmentName(result.getDepartment().getName());
@@ -69,4 +69,49 @@ public class UserService {
         userRepository.editIsStopped(isStoppedId, userId);
     }
 
+    /*
+     *ユーザー編集画面表示（ユーザー取得）
+     */
+    public UserForm selectEditUser(Integer id){
+        List<User> results = new ArrayList<>();
+        results.add(userRepository.findById(id).orElse(null));
+        List<UserForm> users = setUserForm(results);
+        return users.get(0);
+    }
+
+    /*
+     *ユーザー編集処理（ユーザー更新）
+     */
+    public void saveUser(UserForm reqUser) {
+        User saveUser = setUserEntity(reqUser);
+        userRepository.save(saveUser);
+    }
+
+    /*
+     * 取得した情報をEntityに設定
+     */
+    public User setUserEntity(UserForm reqUser) {
+        User user = new User();
+        user.setId(reqUser.getId());
+        user.setAccount(reqUser.getAccount());
+        user.setPassword(reqUser.getPassword());
+        user.setName(reqUser.getName());
+        //user.getBranch().setId(reqUser.getBranchId());
+        //user.getDepartment().setId(reqUser.getDepartmentId());
+
+        Date nowDate = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = sdf.format(nowDate);
+        try {
+            user.setUpdatedDate(sdf.parse(currentTime));
+            if (reqUser.getCreatedDate() == null) {
+                user.setCreatedDate(sdf.parse(currentTime));
+            } else {
+                user.setCreatedDate(reqUser.getCreatedDate());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 }

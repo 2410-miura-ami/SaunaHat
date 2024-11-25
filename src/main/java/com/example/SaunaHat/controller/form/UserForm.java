@@ -1,6 +1,7 @@
 package com.example.SaunaHat.controller.form;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,10 @@ public class UserForm {
     private String account;
 
     private String password;
+
+    //パスワード確認用のフィールド
+    @Transient
+    private String passwordConfirmation;
 
     private String name;
 
