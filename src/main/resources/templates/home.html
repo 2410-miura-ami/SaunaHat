@@ -65,6 +65,11 @@
                 <div class="text">
                     コメント：<span th:text="${comment.text}"/></br>
                 </div>
+                <div class="delete-button" th:object="${loginUser}" th:if="${comment.userAccount == loginUser.account}">
+                    <form th:method="delete" th:action="@{/deleteComment/{id}(id=${comment.id})}" >
+                        <input type="submit" value="削除" class="delete" />
+                    </form>
+                </div>
             </div>
         </div>
         <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}">
