@@ -129,18 +129,28 @@ public class ForumController {
         //取得した返信を画面にバインド
         mav.addObject("comments", comments);
 
+        //セッションからログインユーザ情報取得しバインド
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        mav.addObject("loginUser", loginUser);
+
+        //コメントのエラーメッセージチェック
+        //セッションからエラーメッセージを取得して、有無をチェック
         String errorMessage = (String)session.getAttribute("errorMessage");
         if(errorMessage != null){
+            //エラーメッセージがあった場合はセッションからコメントフォームを取得
             CommentForm commentForm = (CommentForm)session.getAttribute("commentForm");
+            //全てのテキストボックスに本文が出てしまうので、空白に置き換える
             commentForm.setText("");
 
+            //エラーメッセージとコメントフォームを画面にセット
             mav.addObject("errorMessage", errorMessage);
             mav.addObject("commentForm", commentForm);
 
+            //エラーメッセージとコメントフォームのセッションを破棄
             session.removeAttribute("errorMessage");
             session.removeAttribute("commentForm");
         }else {
-            //コメントフォームを画面にバインド
+            //エラーメッセージがなかった場合は空のコメントフォームを画面にバインド
             CommentForm commentForm = new CommentForm();
             mav.addObject("commentForm", commentForm);
         }
@@ -232,6 +242,17 @@ public class ForumController {
     /*
      *コメント削除処理
      */
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/delete/{id}")
+    public ModelAndView deleteContent(@PathVariable Integer id) {
+        //投稿を削除する
+        messageService.deleteMessage(id);
+        //投稿をテーブルから削除した後、トップ画面へ戻る
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      *ユーザー管理画面表示処理

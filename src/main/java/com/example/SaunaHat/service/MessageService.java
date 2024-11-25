@@ -122,5 +122,11 @@ public class MessageService {
         return message;
     }
 
+    /*
+     * レコード削除
+     */
+    public void deleteMessage(Integer id) {
+        messageRepository.deleteById(id);
+    }
 }
 
