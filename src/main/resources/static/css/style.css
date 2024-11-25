@@ -126,6 +126,17 @@ body {
     opacity : 0.7;
 }
 
-.errorMessages {
-    color : red;
+.new-title{
+    font-weight : bold;
+        width : 100px;
+}
+
+.new-category{
+    font-weight : bold;
+        width : 100px;
+}
+
+.new-text{
+    font-weight : bold;
+        width : 100px;
 }

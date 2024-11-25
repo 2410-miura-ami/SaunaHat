@@ -1,6 +1,8 @@
 package com.example.SaunaHat.controller.form;
 
 import java.util.Date;
+
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +13,13 @@ public class MessageForm {
 
     private Integer id;
 
+    @Size(max = 30, message = "・件名は30文字以内で入力してください")
     private String title;
 
+    @Size(max = 100, message = "・本文は100文字以内で入力してください")
     private String text;
 
+    @Size(max = 10, message = "・カテゴリは10文字以内で入力してください")
     private String category;
 
     private int userId;

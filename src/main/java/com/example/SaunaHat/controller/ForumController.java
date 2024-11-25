@@ -129,7 +129,7 @@ public class ForumController {
         //取得した返信を画面にバインド
         mav.addObject("comments", comments);
 
-        /*String errorMessage = (String)session.getAttribute("errorMessage");
+        String errorMessage = (String)session.getAttribute("errorMessage");
         if(errorMessage != null){
             CommentForm commentForm = (CommentForm)session.getAttribute("commentForm");
             commentForm.setText("");
@@ -143,8 +143,9 @@ public class ForumController {
             //コメントフォームを画面にバインド
             CommentForm commentForm = new CommentForm();
             mav.addObject("commentForm", commentForm);
-        }*/
+        }
 
+        /*
         //マップを使ってコメントフォームを投稿ごとに用意
         //マップを準備
         Map<Integer, CommentForm> commentForms = new HashMap<>();
@@ -174,6 +175,7 @@ public class ForumController {
         }
         //マップを使って用意したコメントフォームを画面にバインド
         mav.addObject("commentForms", commentForms);
+        */
 
         // 画面遷移先を指定
         mav.setViewName("/home");
