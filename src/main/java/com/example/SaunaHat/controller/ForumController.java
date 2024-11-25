@@ -12,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -126,6 +129,63 @@ public class ForumController {
     }
 
     /*
+     * 新規投稿画面表示
+     */
+    @GetMapping("/new")
+    public ModelAndView newMessage() {
+        ModelAndView mav = new ModelAndView();
+        // 空のformを準備
+        MessageForm messageForm = new MessageForm();
+        // 画面遷移先を指定
+        mav.setViewName("/new");
+        // 準備した空のFormを保管
+        mav.addObject("formModel", messageForm);
+        return mav;
+    }
+
+    /*
+     *新規投稿処理
+     */
+    @PostMapping("/add")
+    public ModelAndView addTasks(@ModelAttribute("formModel") @Validated MessageForm messageForm, BindingResult result,
+                                 RedirectAttributes redirectAttributes, Model model){
+        //入力されたタスク内容を取得
+        String title = messageForm.getTitle();
+        String category = messageForm.getCategory();
+        String text = messageForm.getText();
+        //エラーメッセージの準備
+        List<String> errorMessages = new ArrayList<>();
+        //タスク内容がブランクの場合
+        if (title.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・件名を入力してください");
+        }
+        if (category.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・カテゴリを入力してください");
+        }
+        if (text.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・本文を入力してください");
+        }
+        for (FieldError error : result.getFieldErrors()){
+            String message = error.getDefaultMessage();
+            //取得したエラーメッセージをエラーメッセージのリストに格納
+            errorMessages.add(message);
+        }
+        if(!errorMessages.isEmpty()) {
+            model.addAttribute("errorMessages", errorMessages);
+            return new ModelAndView("/new");
+        }
+        //セッションからログイン情報取得
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        // 投稿をテーブルに格納
+        messageService.saveMessage(messageForm, loginUser);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/home");
+    }
+
+    /*
      *ユーザー管理画面表示処理
      */
     @GetMapping("/userManage")
@@ -199,6 +259,8 @@ public class ForumController {
 
         //更新処理
         userForm.setId(id);
+        userForm.setBranchId(branchId);
+        userForm.setDepartmentId(departmentId);
         userService.saveUser(userForm);
 
         //ユーザー管理画面へリダイレクト

@@ -2,6 +2,8 @@ package com.example.SaunaHat.service;
 
 import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.repository.UserRepository;
+import com.example.SaunaHat.repository.entity.Branch;
+import com.example.SaunaHat.repository.entity.Department;
 import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,12 +94,22 @@ public class UserService {
      */
     public User setUserEntity(UserForm reqUser) {
         User user = new User();
+
+        //branchIdをBranch型にする
+        Branch branch = new Branch();
+        branch.setId(reqUser.getBranchId());
+
+        //departmentIdをDepartment型にする
+        Department department = new Department();
+        department.setId(reqUser.getDepartmentId());
+
+        //Branch型のbranchIdと、Department型のdepartmentId
         user.setId(reqUser.getId());
         user.setAccount(reqUser.getAccount());
         user.setPassword(reqUser.getPassword());
         user.setName(reqUser.getName());
-        //user.getBranch().setId(reqUser.getBranchId());
-        //user.getDepartment().setId(reqUser.getDepartmentId());
+        user.setBranch(branch);
+        user.setDepartment(department);
 
         Date nowDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

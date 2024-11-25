@@ -35,5 +35,4 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "AND m.category = :category " +
             "ORDER BY m.createdDate DESC")
     public List<Message> selectMessageByCategory(@Param("startDate")Date startDate, @Param("endDate")Date endDate, @Param("category")String category);
-
 }

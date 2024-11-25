@@ -141,3 +141,18 @@ body {
 .updateUser-button {
     margin : 10px 0 10px 0;
  }
+
+.new-title{
+    font-weight : bold;
+        width : 100px;
+}
+
+.new-category{
+    font-weight : bold;
+        width : 100px;
+}
+
+.new-text{
+    font-weight : bold;
+        width : 100px;
+}

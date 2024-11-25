@@ -1,8 +1,11 @@
 package com.example.SaunaHat.service;
 
 import com.example.SaunaHat.controller.form.MessageForm;
+import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.repository.MessageRepository;
+import com.example.SaunaHat.repository.UserRepository;
 import com.example.SaunaHat.repository.entity.Message;
+import com.example.SaunaHat.repository.entity.User;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,8 @@ import java.util.List;
 public class MessageService {
     @Autowired
     MessageRepository messageRepository;
+    @Autowired
+    UserRepository userRepository;
     /*@Autowired
     private ReportMapper reportMapper;*/
 
@@ -91,6 +96,31 @@ public class MessageService {
         return messages;
     }
 
+    /*
+     *新規投稿登録
+     */
+    public void saveMessage(MessageForm reqMessage, UserForm reqLoginUser) {
+        //ログインユーザ情報をUser型で取得
+        String loginAccount = reqLoginUser.getAccount();
+        String loginPassword = reqLoginUser.getPassword();
+        List<User> results = userRepository.selectUser(loginAccount, loginPassword);
+        User loginUser = results.get(0);
+        //投稿、ログインユーザ情報をEntityに詰める
+        Message saveMessage = setMessageEntity(reqMessage, loginUser);
+        //投稿をDBに登録
+        messageRepository.save(saveMessage);
+    }
+    /*
+     *投稿をEntityに詰める
+     */
+    private Message setMessageEntity(MessageForm reqMessage, User loginUser){
+        Message message = new Message();
+        message.setTitle(reqMessage.getTitle());
+        message.setText(reqMessage.getText());
+        message.setCategory(reqMessage.getCategory());
+        message.setUser(loginUser);
+        return message;
+    }
 
 }
 
