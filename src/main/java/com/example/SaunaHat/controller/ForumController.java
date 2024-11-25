@@ -242,6 +242,13 @@ public class ForumController {
     /*
      *コメント削除処理
      */
+    @DeleteMapping("/deleteComment/{id}")
+    public ModelAndView deleteComment(@PathVariable Integer id) {
+        //コメントのIDを引数に削除する
+        commentService.deleteComment(id);
+        //コメントをテーブルから削除した後、トップ画面へ戻る
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      * 投稿削除処理

@@ -60,6 +60,13 @@ public class CommentService {
     }
 
     /*
+     * コメント削除処理
+     */
+    public void deleteComment(Integer id) {
+        commentRepository.deleteById(id);
+    }
+
+    /*
      * リクエストから取得した情報をEntityに設定
      */
     private Comment setCommentEntity(CommentForm commentForm) {
