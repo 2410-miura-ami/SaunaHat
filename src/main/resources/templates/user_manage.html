@@ -12,6 +12,9 @@
 <div class="header-contents">
     <h2>ユーザー管理</h2>
 </div>
+<a href="/newEntry">
+    <button class="new-button" type="button">新規登録</button>
+</a>
 <p class="userList-title">ユーザー一覧</p>
 <div class="main-contents">
     <div class="head-account">アカウント</div>
@@ -47,11 +50,9 @@
 
 
         <div class="edit-button">
-            <!--<form th:method="get" th:action="@{/edit/{id}(id=${user.id})" >-->
-            <form>
+            <form th:method="get" th:action="@{/editUser/{id}(id=${user.id})}" >
                 <input type="submit" value="編集" />
             </form>
-            <!--</form>-->
         </div>
     </div>
 
