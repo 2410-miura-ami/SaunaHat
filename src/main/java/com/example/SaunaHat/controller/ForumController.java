@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -68,11 +69,11 @@ public class ForumController {
                                @RequestParam(name = "password") String password){
         //バリデーション
         List<String> errorMessages = new ArrayList<String>();
-        if (StringUtils.isBlank(account)){
-            errorMessages.add("アカウントを入力してください");
+        if (account.isBlank()){
+            errorMessages.add("・アカウントを入力してください");
         }
-        if (StringUtils.isBlank(password)){
-            errorMessages.add("パスワードを入力してください");
+        if (password.isBlank()){
+            errorMessages.add("・パスワードを入力してください");
         }
         if (errorMessages.size() != 0){
             ModelAndView mav = new ModelAndView();
@@ -195,6 +196,63 @@ public class ForumController {
     }
 
     /*
+     * 新規投稿画面表示
+     */
+    @GetMapping("/new")
+    public ModelAndView newMessage() {
+        ModelAndView mav = new ModelAndView();
+        // 空のformを準備
+        MessageForm messageForm = new MessageForm();
+        // 画面遷移先を指定
+        mav.setViewName("/new");
+        // 準備した空のFormを保管
+        mav.addObject("formModel", messageForm);
+        return mav;
+    }
+
+    /*
+     *新規投稿処理
+     */
+    @PostMapping("/add")
+    public ModelAndView addTasks(@ModelAttribute("formModel") @Validated MessageForm messageForm, BindingResult result,
+                                 RedirectAttributes redirectAttributes, Model model){
+        //入力されたタスク内容を取得
+        String title = messageForm.getTitle();
+        String category = messageForm.getCategory();
+        String text = messageForm.getText();
+        //エラーメッセージの準備
+        List<String> errorMessages = new ArrayList<>();
+        //タスク内容がブランクの場合
+        if (title.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・件名を入力してください");
+        }
+        if (category.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・カテゴリを入力してください");
+        }
+        if (text.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・本文を入力してください");
+        }
+        for (FieldError error : result.getFieldErrors()){
+            String message = error.getDefaultMessage();
+            //取得したエラーメッセージをエラーメッセージのリストに格納
+            errorMessages.add(message);
+        }
+        if(!errorMessages.isEmpty()) {
+            model.addAttribute("errorMessages", errorMessages);
+            return new ModelAndView("/new");
+        }
+        //セッションからログイン情報取得
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        // 投稿をテーブルに格納
+        messageService.saveMessage(messageForm, loginUser);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/home");
+    }
+
+    /*
      *コメント登録処理
      */
     @PostMapping("/comment/{id}")
@@ -242,6 +300,13 @@ public class ForumController {
     /*
      *コメント削除処理
      */
+    @DeleteMapping("/deleteComment/{id}")
+    public ModelAndView deleteComment(@PathVariable Integer id) {
+        //コメントのIDを引数に削除する
+        commentService.deleteComment(id);
+        //コメントをテーブルから削除した後、トップ画面へ戻る
+        return new ModelAndView("redirect:/home");
+    }
 
     /*
      * 投稿削除処理
@@ -337,7 +402,7 @@ public class ForumController {
     }
 
     /*
-     *ユーザー編集画面表示
+     *ユーザー登録画面表示
      */
     @GetMapping("/newEntry")
     public ModelAndView newEntry(){
@@ -354,6 +419,51 @@ public class ForumController {
 
         //画面に遷移
         return mav;
+    }
+
+    /*
+     *ユーザー登録処理
+     */
+    @PutMapping("/newEntry")
+    public ModelAndView entryUser(@ModelAttribute("user") UserForm userForm, @RequestParam(name="branch") Integer branchId,
+                                  @RequestParam(name="department") Integer departmentId){
+        ModelAndView mav = new ModelAndView();
+
+        //バリデーション　必須チェック
+        List<String> errorMessages = new ArrayList<String>();
+        if (userForm.getAccount().isBlank()){
+            errorMessages.add("・アカウントを入力してください");
+        }
+        if (userForm.getPassword().isBlank()){
+            errorMessages.add("・パスワードを入力してください");
+        }
+        if (userForm.getName().isBlank()){
+            errorMessages.add("・氏名を入力してください");
+        }
+        if (Integer.toString(branchId).isBlank()){
+            errorMessages.add("・支社を選択してください");
+        }
+        if (Integer.toString(departmentId).isBlank()){
+            errorMessages.add("・部署を選択してください");
+        }
+        //重複チェック
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
+            errorMessages.add("・パスワードと確認用パスワードが一致しません");
+        }
+        if (errorMessages.size() != 0){
+            mav.addObject("errorMessages", errorMessages);
+            mav.addObject("user", userForm);
+            mav.setViewName("/newEntry");
+            return mav;
+        }
+
+        //登録処理
+        userForm.setBranchId(branchId);
+        userForm.setDepartmentId(departmentId);
+        userService.saveUser(userForm);
+
+        //ユーザー管理画面へリダイレクト
+        return new ModelAndView("redirect:/userManage");
     }
 
     /*
