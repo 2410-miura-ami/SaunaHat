@@ -16,10 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class ForumController {
@@ -105,10 +104,6 @@ public class ForumController {
     public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
-        //コメント投稿欄表示のためのバインド
-        CommentForm commentForm = new CommentForm();
-        mav.addObject("commentForm", commentForm);
-
         //ログインユーザの部署チェック
         //セッションからログインユーザ情報を取得
         UserForm userForm = (UserForm)session.getAttribute("loginUser");
@@ -120,16 +115,65 @@ public class ForumController {
         //投稿の表示
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
-        //返信の表示
-        List<CommentForm> comments = commentService.findAllComment();
+        //取得した投稿を画面にバインド
+        mav.addObject("formModel", messages);
+
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
         mav.addObject("category", category);
 
-        //取得した情報を画面にバインド
-        mav.addObject("formModel", messages);
+        //返信の表示
+        //返信の全件取得
+        List<CommentForm> comments = commentService.findAllComment();
+        //取得した返信を画面にバインド
         mav.addObject("comments", comments);
+
+        /*String errorMessage = (String)session.getAttribute("errorMessage");
+        if(errorMessage != null){
+            CommentForm commentForm = (CommentForm)session.getAttribute("commentForm");
+            commentForm.setText("");
+
+            mav.addObject("errorMessage", errorMessage);
+            mav.addObject("commentForm", commentForm);
+
+            session.removeAttribute("errorMessage");
+            session.removeAttribute("commentForm");
+        }else {
+            //コメントフォームを画面にバインド
+            CommentForm commentForm = new CommentForm();
+            mav.addObject("commentForm", commentForm);
+        }*/
+
+        //マップを使ってコメントフォームを投稿ごとに用意
+        //マップを準備
+        Map<Integer, CommentForm> commentForms = new HashMap<>();
+        for (MessageForm message : messages) {
+            //コメントフォームを準備
+            CommentForm commentForm = new CommentForm();
+            //各投稿のIDをコメントフォームにセット
+            commentForm.setMessageId(message.getId());
+            //マップに投稿IDと投稿IDの入ったコメントフォームをセット
+            commentForms.put(message.getId(), commentForm);
+
+        }
+
+        //セッションからエラーメッセージを取得
+        String errorMessages = (String)session.getAttribute("errorMessage");
+        //エラーメッセージがある場合は、下記の処理
+        if(errorMessages != null) {
+            //エラーメッセージがあるFormを区別して取得
+            CommentForm errorForm = (CommentForm) session.getAttribute("commentForm");
+            // エラー時のフォーム内容を更新
+            commentForms.put(errorForm.getMessageId(), errorForm);
+            mav.addObject("errorMessages", errorMessages);
+
+            //エラーメッセージとコメント本文のセッションを破棄
+            session.removeAttribute("errorMessage");
+            session.removeAttribute("commentForm");
+        }
+        //マップを使って用意したコメントフォームを画面にバインド
+        mav.addObject("commentForms", commentForms);
 
         // 画面遷移先を指定
         mav.setViewName("/home");
@@ -142,23 +186,39 @@ public class ForumController {
      *コメント登録処理
      */
     @PostMapping("/comment/{id}")
-    public ModelAndView comment(@PathVariable("id") int messageId, @ModelAttribute("commentForm")CommentForm commentForm) {
+    public ModelAndView comment(@PathVariable("id") int messageId, @ModelAttribute("commentForm")CommentForm commentForm, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
 
         //コメント本文のバリデーション
-        //
+        //エラーメッセージの準備
+        String errorMessage = null;
+        //コメントフォームから返信の本文を取得
+        String text = commentForm.getText();
 
-        //セッションからユーザIDを取得
-        int userId = ((UserForm)session.getAttribute("loginUser")).getId();
-        //取得した情報をFormにセット
-        commentForm.setMessageId(messageId);
-        commentForm.setUserId(userId);
+        //コメントがブランク、500文字を超えた場合にエラーメッセージをセット
+        if(StringUtils.isBlank(text)){
+            errorMessage = "メッセージを入力してください";
+        }else if(text.length() > 500){
+            errorMessage = "500文字内で入力してください";
+        }
+        //エラーメッセージが1つでもあった場合はエラーメッセージとコメント本文を画面にセット
+        if(!(errorMessage == null)){
+            //返信対象の投稿IDをFormにセット
+            commentForm.setMessageId(messageId);
+            session.setAttribute("commentForm", commentForm);
+            session.setAttribute("errorMessage", errorMessage);
 
-        //投稿のIDを引数にinsertする
-        commentService.addComment(commentForm);
+        }else {
+            //エラーメッセージが空の場合はコメント投稿処理を実行
+            //セッションからユーザIDを取得
+            int userId = ((UserForm) session.getAttribute("loginUser")).getId();
+            //取得した情報をFormにセット
+            commentForm.setMessageId(messageId);
+            commentForm.setUserId(userId);
 
-        //取得した情報を画面にバインド
-        mav.addObject("commentForm", commentForm);
+            //投稿のIDを引数にinsertする
+            commentService.addComment(commentForm);
+        }
 
         // 画面遷移先を指定
         mav.setViewName("redirect:/home");

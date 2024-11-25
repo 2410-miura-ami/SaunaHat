@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class MessageForm {
 
-    private int id;
+    private Integer id;
 
     private String title;
 

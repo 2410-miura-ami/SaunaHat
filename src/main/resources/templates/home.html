@@ -47,17 +47,24 @@
         </div>
         <div class="comments" th:each="comment:${comments}">
             <div th:if="${comment.messageId == message.id}">
-                <div class="userName">
+                <div class="name">
                     コメント者名：<span th:text="${comment.userName}"/>
                 </div>
-                <div class="commentText">
+                <div class="text">
                     コメント：<span th:text="${comment.text}"/></br>
                 </div>
             </div>
         </div>
         <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}">
-            <textarea th:field="*{text}" size="20" class="add-comment"></textarea><br/>
-            <input type="submit" value="コメント"/>
+            <div class="errorMessages">
+                <div th:if="${errorMessage != null}">
+                    <div th:if="${message.id == commentForm.messageId}" >
+                        <span th:text="${errorMessage}"/>
+                    </div>
+                </div>
+                <textarea th:field="*{text}" class="add-comment" ></textarea><br/>
+                <input type="submit" value="コメント"/>
+            </div>
         </form>
     </div><br/>
 </div>
