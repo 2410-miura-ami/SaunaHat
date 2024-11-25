@@ -121,6 +121,10 @@ public class ForumController {
         mav.addObject("formModel", messages);
         mav.addObject("comments", comments);
 
+        //セッションからログインユーザ情報取得しバインド
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        mav.addObject("loginUser", loginUser);
+
         // 画面遷移先を指定
         mav.setViewName("/home");
 
@@ -182,6 +186,17 @@ public class ForumController {
         // 投稿をテーブルに格納
         messageService.saveMessage(messageForm, loginUser);
         // rootへリダイレクト
+        return new ModelAndView("redirect:/home");
+    }
+
+    /*
+     * 投稿削除処理
+     */
+    @DeleteMapping("/delete/{id}")
+    public ModelAndView deleteContent(@PathVariable Integer id) {
+        //投稿を削除する
+        messageService.deleteMessage(id);
+        //投稿をテーブルから削除した後、トップ画面へ戻る
         return new ModelAndView("redirect:/home");
     }
 
