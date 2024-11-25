@@ -301,6 +301,49 @@ public class ForumController {
     }
 
     /*
+     *ユーザー編集画面表示
+     */
+    @GetMapping("/editUser/{id}")
+    public ModelAndView editUser(@PathVariable Integer id){
+        ModelAndView mav = new ModelAndView();
+
+        //編集ユーザー情報を取得
+        UserForm editUser = userService.selectEditUser(id);
+
+        //編集するユーザー情報を画面にバインド
+        mav.addObject("user", editUser);
+
+        //画面遷移先を指定
+        mav.setViewName("/user_edit");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *ユーザー編集処理
+     */
+    @PutMapping("/update/{id}")
+    public ModelAndView updateUser(@PathVariable Integer id, @ModelAttribute("user") UserForm userForm, @RequestParam(name="branch") Integer branchId, @RequestParam(name="department") Integer departmentId){
+        ModelAndView mav = new ModelAndView();
+
+        //パスワードの入力がない時、パスワード以外を更新
+
+        //パスワードの入力ある時、確認用と一致するかチェック
+
+        //エラーチェック
+
+        //更新処理
+        userForm.setId(id);
+        userForm.setBranchId(branchId);
+        userForm.setDepartmentId(departmentId);
+        userService.saveUser(userForm);
+
+        //ユーザー管理画面へリダイレクト
+        return new ModelAndView("redirect:/userManage");
+    }
+
+    /*
      *ログアウト処理
      */
     @GetMapping("/logout")

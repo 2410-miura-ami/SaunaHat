@@ -47,11 +47,9 @@
 
 
         <div class="edit-button">
-            <!--<form th:method="get" th:action="@{/edit/{id}(id=${user.id})" >-->
-            <form>
+            <form th:method="get" th:action="@{/editUser/{id}(id=${user.id})}" >
                 <input type="submit" value="編集" />
             </form>
-            <!--</form>-->
         </div>
     </div>
 
