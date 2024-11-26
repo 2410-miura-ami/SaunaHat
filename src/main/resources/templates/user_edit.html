@@ -27,7 +27,6 @@
 
             <div class="edit-items">
                 <span class="head-edit-item">パスワード</span>
-                <!--<input type="password">-->
                 <input type="password" th:field="*{password}" />
             </div>
 
@@ -43,7 +42,6 @@
 
             <div class="edit-items">
                 <div class="head-edit-item">支社</div>
-                <!--<input type="text" th:field="*{branchName}" />-->
                 <select name="branch">
                     <option value="1" th:selected="${user.branchId == 1}">本社</option>
                     <option value="2" th:selected="${user.branchId == 2}">A支社</option>
@@ -55,7 +53,6 @@
 
             <div class="edit-items">
                 <div class="head-edit-item">部署</div>
-                <!--<input type="text" th:field="*{departmentName}" />-->
                 <select name="department">
                     <option value="1" th:selected="${user.departmentId == 1}">総務人事部</option>
                     <option value="2" th:selected="${user.departmentId == 2}">情報管理部</option>
