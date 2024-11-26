@@ -410,6 +410,7 @@ public class ForumController {
         if((!userForm.getAccount().isBlank()) && (!userForm.getAccount().matches("^[a-zA-Z0-9]{6,20}+$"))) {
             errorMessages.add("・アカウントは半角英数字かつ6文字以上20文字以下で入力してください");
         }
+
         if((!StringUtils.isBlank(password)) && (!password.matches("^[!-~]{6,20}+$"))) {
             errorMessages.add("・パスワードは半角文字かつ6文字以上20文字以下で入力してください");
         }
@@ -478,7 +479,8 @@ public class ForumController {
      *ユーザー登録処理
      */
     @PutMapping("/newEntry")
-    public ModelAndView entryUser(@ModelAttribute("user") @Validated UserForm userForm, BindingResult result, @RequestParam(name="branch") Integer branchId,
+    public ModelAndView entryUser(@ModelAttribute("user") @Validated UserForm userForm, BindingResult result,
+                                  @RequestParam(name="branch") Integer branchId,
                                   @RequestParam(name="department") Integer departmentId){
         ModelAndView mav = new ModelAndView();
 
@@ -532,6 +534,7 @@ public class ForumController {
                 errorMessages.add(message);
             }
         }
+        //エラーメッセージを表示
         if (errorMessages.size() != 0){
             mav.addObject("errorMessages", errorMessages);
 
