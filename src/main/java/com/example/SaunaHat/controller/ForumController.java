@@ -10,6 +10,7 @@ import com.example.SaunaHat.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -82,9 +83,9 @@ public class ForumController {
             return mav;
         }
         //ログインユーザ情報取得処理
-        UserForm loginUser = userService.selectLoginUser(account, password);
+        UserForm loginUser = userService.selectLoginUser(account);
         //バリデーション　ユーザが存在しないか停止中ならログイン失敗
-        if (loginUser == null || loginUser.getIsStopped() == 1){
+        if (loginUser == null || loginUser.getIsStopped() == 1 || !BCrypt.checkpw(password, loginUser.getPassword())){
             errorMessages.add("ログインに失敗しました");
         }
         if (errorMessages.size() != 0){

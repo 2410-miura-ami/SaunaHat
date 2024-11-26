@@ -15,8 +15,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
-    @Query(value = "SELECT * FROM users WHERE account = :account AND password =  :password", nativeQuery = true)
-    public List<User> selectUser(@Param("account") String account, @Param("password")String password);
+    @Query(value = "SELECT * FROM users WHERE account = :account", nativeQuery = true)
+    public List<User> selectUser(@Param("account") String account);
 
     /*
     @Transactional
