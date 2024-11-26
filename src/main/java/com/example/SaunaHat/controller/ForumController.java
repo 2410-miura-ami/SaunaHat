@@ -402,7 +402,7 @@ public class ForumController {
 
         //重複チェック
         UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
-        if (selectedAccount != null){
+        if ((selectedAccount != null) && (selectedAccount.getId() != userForm.getId())) {
             errorMessages.add("・アカウントが重複しています");
         }
 
@@ -410,7 +410,6 @@ public class ForumController {
         if((!userForm.getAccount().isBlank()) && (!userForm.getAccount().matches("^[a-zA-Z0-9]{6,20}+$"))) {
             errorMessages.add("・アカウントは半角英数字かつ6文字以上20文字以下で入力してください");
         }
-
         if((!StringUtils.isBlank(password)) && (!password.matches("^[!-~]{6,20}+$"))) {
             errorMessages.add("・パスワードは半角文字かつ6文字以上20文字以下で入力してください");
         }
