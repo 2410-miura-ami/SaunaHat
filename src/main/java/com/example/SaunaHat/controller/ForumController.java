@@ -446,12 +446,21 @@ public class ForumController {
         if (Integer.toString(departmentId).isBlank()){
             errorMessages.add("・部署を選択してください");
         }
+        //重複チェック
+        UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
+        if (selectedAccount != null){
+            errorMessages.add("・アカウントが重複しています");
+        }
         //妥当性チェック
         if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
             errorMessages.add("・パスワードと確認用パスワードが一致しません");
         }
         if (errorMessages.size() != 0){
             mav.addObject("errorMessages", errorMessages);
+
+            //入力情報の保持
+            userForm.setBranchId(branchId);
+            userForm.setDepartmentId(departmentId);
             mav.addObject("user", userForm);
             mav.setViewName("/user_entry");
             return mav;
