@@ -16,6 +16,7 @@ public class FilterConfig {
         //フィルターを適用するURLを指定
         bean.addUrlPatterns("/userManage");
         bean.addUrlPatterns("/editUser/*");
+        bean.addUrlPatterns("/newEntry");
 
         return bean;
     }
