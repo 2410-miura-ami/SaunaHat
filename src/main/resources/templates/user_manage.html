@@ -12,6 +12,11 @@
 <div class="header-contents">
     <h2>ユーザー管理</h2>
 </div>
+
+<div class="errorMessages" th:each="errorMessage : ${errorMessages}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <p class="userList-title">ユーザー一覧</p>
 <div class="main-contents">
     <div class="head-account">アカウント</div>
