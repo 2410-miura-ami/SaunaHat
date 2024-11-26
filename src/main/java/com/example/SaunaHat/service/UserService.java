@@ -4,6 +4,7 @@ import com.example.SaunaHat.controller.form.UserForm;
 import com.example.SaunaHat.repository.UserRepository;
 import com.example.SaunaHat.repository.entity.Branch;
 import com.example.SaunaHat.repository.entity.Department;
+import com.example.SaunaHat.repository.entity.Message;
 import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,8 +109,13 @@ public class UserService {
         user.setAccount(reqUser.getAccount());
         user.setPassword(reqUser.getPassword());
         user.setName(reqUser.getName());
+        user.setIsStopped(reqUser.getIsStopped());
         user.setBranch(branch);
         user.setDepartment(department);
+
+        //Userエンティティにあるmessagesをセットする
+        List<Message> messages = new ArrayList<>();
+        user.setMessages(messages);
 
         Date nowDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -125,5 +131,18 @@ public class UserService {
             e.printStackTrace();
         }
         return user;
+    }
+
+    /*
+     * 重複チェック　入力されたアカウント名を検索
+     */
+    public UserForm findByAccount(String account){
+        List<User> results = userRepository.findByAccount(account);
+        //存在しないアカウントの場合nullを返す
+        if (results.size() == 0) {
+            return null;
+        }
+        List<UserForm> selectedUser = setUserForm(results);
+        return selectedUser.get(0);
     }
 }

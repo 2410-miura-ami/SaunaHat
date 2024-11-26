@@ -17,6 +17,7 @@ public class FilterConfig {
         //フィルターを適用するURLを指定（ユーザ管理系）
         bean.addUrlPatterns("/userManage/*");
         bean.addUrlPatterns("/editUser/*");
+        bean.addUrlPatterns("/newEntry");
 
         //フィルターの適用順序を指定（2番目）
         bean.setOrder(2);
