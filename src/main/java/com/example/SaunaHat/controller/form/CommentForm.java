@@ -23,4 +23,8 @@ public class CommentForm {
     private String userName;
 
     private String userAccount;
+
+    //コメントにエラーが合った際に使用。
+    //邪魔になったら阿部に教えてください！
+    private String errorText;
 }

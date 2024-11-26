@@ -113,12 +113,21 @@ public class ForumController {
         //ユーザ情報から取得した部署IDを画面にセット
         mav.addObject("departmentId", departmentId);
 
+        //管理者権限フィルターのエラーメッセージ表示
+        //セッションから管理者権限のエラーメッセージを取得
+        String managementErrorMessage = (String) session.getAttribute("managementErrorMessage");
+        if(managementErrorMessage != null){
+            //管理者権限のエラーメッセージがあった場合は画面にエラーメッセージをセット
+            mav.addObject("managementErrorMessage", managementErrorMessage);
+            //セッションからエラーメッセージを除去
+            session.removeAttribute("managementErrorMessage");
+        }
+
         //投稿の表示
         //投稿を全件取得(引数に絞り込み情報をセット)
         List<MessageForm> messages = messageService.findAllMessage(startDate, endDate, category);
         //取得した投稿を画面にバインド
         mav.addObject("formModel", messages);
-
         //絞り込み情報を画面にセット
         mav.addObject("startDate", startDate);
         mav.addObject("endDate", endDate);
@@ -134,19 +143,19 @@ public class ForumController {
         UserForm loginUser = (UserForm) session.getAttribute("loginUser");
         mav.addObject("loginUser", loginUser);
 
-        //コメントのエラーメッセージチェック
-        //セッションからエラーメッセージを取得して、有無をチェック
+        //コメント投稿機能表示
+        //セッションからエラーメッセージを取得して、コメントのエラー有無をチェック
         String errorMessage = (String)session.getAttribute("errorMessage");
         if(errorMessage != null){
             //エラーメッセージがあった場合はセッションからコメントフォームを取得
             CommentForm commentForm = (CommentForm)session.getAttribute("commentForm");
+            //エラーになったtextをエラーtextに詰めなおす
+            commentForm.setErrorText(commentForm.getText());
             //全てのテキストボックスに本文が出てしまうので、空白に置き換える
             commentForm.setText("");
-
             //エラーメッセージとコメントフォームを画面にセット
             mav.addObject("errorMessage", errorMessage);
             mav.addObject("commentForm", commentForm);
-
             //エラーメッセージとコメントフォームのセッションを破棄
             session.removeAttribute("errorMessage");
             session.removeAttribute("commentForm");
@@ -156,41 +165,8 @@ public class ForumController {
             mav.addObject("commentForm", commentForm);
         }
 
-        /*
-        //マップを使ってコメントフォームを投稿ごとに用意
-        //マップを準備
-        Map<Integer, CommentForm> commentForms = new HashMap<>();
-        for (MessageForm message : messages) {
-            //コメントフォームを準備
-            CommentForm commentForm = new CommentForm();
-            //各投稿のIDをコメントフォームにセット
-            commentForm.setMessageId(message.getId());
-            //マップに投稿IDと投稿IDの入ったコメントフォームをセット
-            commentForms.put(message.getId(), commentForm);
-
-        }
-
-        //セッションからエラーメッセージを取得
-        String errorMessages = (String)session.getAttribute("errorMessage");
-        //エラーメッセージがある場合は、下記の処理
-        if(errorMessages != null) {
-            //エラーメッセージがあるFormを区別して取得
-            CommentForm errorForm = (CommentForm) session.getAttribute("commentForm");
-            // エラー時のフォーム内容を更新
-            commentForms.put(errorForm.getMessageId(), errorForm);
-            mav.addObject("errorMessages", errorMessages);
-
-            //エラーメッセージとコメント本文のセッションを破棄
-            session.removeAttribute("errorMessage");
-            session.removeAttribute("commentForm");
-        }
-        //マップを使って用意したコメントフォームを画面にバインド
-        mav.addObject("commentForms", commentForms);
-        */
-
         // 画面遷移先を指定
         mav.setViewName("/home");
-
         //画面に遷移
         return mav;
     }
@@ -208,6 +184,14 @@ public class ForumController {
         //コメントフォームから返信の本文を取得
         String text = commentForm.getText();
 
+        //エラーメッセージ表示後のコメント登録対応
+        //エラー後にテキストが入力された場合は、入力されたテキストをFormのtextに詰める
+        if(commentForm.getErrorText() != null){
+            text = commentForm.getErrorText();
+            commentForm.setText(text);
+        }
+
+        //コメントのエラーチェック
         //コメントがブランク、500文字を超えた場合にエラーメッセージをセット
         if(StringUtils.isBlank(text)){
             errorMessage = "メッセージを入力してください";
@@ -220,7 +204,6 @@ public class ForumController {
             commentForm.setMessageId(messageId);
             session.setAttribute("commentForm", commentForm);
             session.setAttribute("errorMessage", errorMessage);
-
         }else {
             //エラーメッセージが空の場合はコメント投稿処理を実行
             //セッションからユーザIDを取得
@@ -228,14 +211,12 @@ public class ForumController {
             //取得した情報をFormにセット
             commentForm.setMessageId(messageId);
             commentForm.setUserId(userId);
-
             //投稿のIDを引数にinsertする
             commentService.addComment(commentForm);
         }
 
         // 画面遷移先を指定
         mav.setViewName("redirect:/home");
-
         //画面に遷移
         return mav;
     }
