@@ -10,6 +10,7 @@ body {
 	text-align: right;
 }
 .header-item {
+    text-align: right;
     display : inline-block;
 }
 
@@ -48,6 +49,8 @@ body {
 
 .text {
     font-size: 12px;
+    white-space: pre-wrap;
+    text-align: left;
 }
 
 .user-list {
@@ -166,4 +169,30 @@ body {
 
 .errorMessages {
      color: red;
+}
+
+.new {
+    text-align: left;
+}
+
+.commentText {
+    font-size: 12px;
+    white-space: pre-wrap;
+    text-align: left;
+    background-color: #DDDDDD;
+    width: 70%;
+    border-radius: 3px;
+    display: inline-block;
+    overflow-wrap: anywhere;
+}
+
+.commentName {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.commentArea {
+    border: solid;
+    background-color: white;
 }
