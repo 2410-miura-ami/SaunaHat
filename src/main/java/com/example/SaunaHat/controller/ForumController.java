@@ -339,6 +339,7 @@ public class ForumController {
         return new ModelAndView("redirect:/userManage");
     }
 
+
     /*
      *ユーザー編集画面表示
      */
