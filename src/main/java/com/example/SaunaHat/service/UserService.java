@@ -118,10 +118,11 @@ public class UserService {
         user.setAccount(reqUser.getAccount());
         user.setPassword(reqUser.getPassword());
         user.setName(reqUser.getName());
+        user.setIsStopped(reqUser.getIsStopped());
         user.setBranch(branch);
         user.setDepartment(department);
 
-        //Userエンティティにあるmessageをセットする
+        //Userエンティティにあるmessagesをセットする
         List<Message> messages = new ArrayList<>();
         user.setMessages(messages);
 

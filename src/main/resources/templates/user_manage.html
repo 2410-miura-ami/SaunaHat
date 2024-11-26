@@ -12,6 +12,11 @@
 <div class="header-contents">
     <h2>ユーザー管理</h2>
 </div>
+
+<div class="errorMessages" th:each="errorMessage : ${errorMessages}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <a href="/newEntry">
     <button class="new-button" type="button">新規登録</button>
 </a>
