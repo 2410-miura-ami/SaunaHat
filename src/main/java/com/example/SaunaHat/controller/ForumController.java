@@ -69,11 +69,11 @@ public class ForumController {
                                @RequestParam(name = "password") String password){
         //バリデーション
         List<String> errorMessages = new ArrayList<String>();
-        if (StringUtils.isBlank(account)){
-            errorMessages.add("アカウントを入力してください");
+        if (account.isBlank()){
+            errorMessages.add("・アカウントを入力してください");
         }
-        if (StringUtils.isBlank(password)){
-            errorMessages.add("パスワードを入力してください");
+        if (password.isBlank()){
+            errorMessages.add("・パスワードを入力してください");
         }
         if (errorMessages.size() != 0){
             ModelAndView mav = new ModelAndView();
@@ -169,6 +169,63 @@ public class ForumController {
         mav.setViewName("/home");
         //画面に遷移
         return mav;
+    }
+
+    /*
+     * 新規投稿画面表示
+     */
+    @GetMapping("/new")
+    public ModelAndView newMessage() {
+        ModelAndView mav = new ModelAndView();
+        // 空のformを準備
+        MessageForm messageForm = new MessageForm();
+        // 画面遷移先を指定
+        mav.setViewName("/new");
+        // 準備した空のFormを保管
+        mav.addObject("formModel", messageForm);
+        return mav;
+    }
+
+    /*
+     *新規投稿処理
+     */
+    @PostMapping("/add")
+    public ModelAndView addTasks(@ModelAttribute("formModel") @Validated MessageForm messageForm, BindingResult result,
+                                 RedirectAttributes redirectAttributes, Model model){
+        //入力されたタスク内容を取得
+        String title = messageForm.getTitle();
+        String category = messageForm.getCategory();
+        String text = messageForm.getText();
+        //エラーメッセージの準備
+        List<String> errorMessages = new ArrayList<>();
+        //タスク内容がブランクの場合
+        if (title.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・件名を入力してください");
+        }
+        if (category.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・カテゴリを入力してください");
+        }
+        if (text.isBlank()) {
+            // エラーメッセージをセット
+            errorMessages.add("・本文を入力してください");
+        }
+        for (FieldError error : result.getFieldErrors()){
+            String message = error.getDefaultMessage();
+            //取得したエラーメッセージをエラーメッセージのリストに格納
+            errorMessages.add(message);
+        }
+        if(!errorMessages.isEmpty()) {
+            model.addAttribute("errorMessages", errorMessages);
+            return new ModelAndView("/new");
+        }
+        //セッションからログイン情報取得
+        UserForm loginUser = (UserForm) session.getAttribute("loginUser");
+        // 投稿をテーブルに格納
+        messageService.saveMessage(messageForm, loginUser);
+        // rootへリダイレクト
+        return new ModelAndView("redirect:/home");
     }
 
     /*
@@ -314,25 +371,48 @@ public class ForumController {
         String passwordConfirmation = userForm.getPasswordConfirmation();
 
 
-        //バリデーション
+        //バリデーション必須チェック
         List<String> errorMessages = new ArrayList<String>();
+
+        if (userForm.getAccount().isBlank()){
+            errorMessages.add("・アカウントを入力してください");
+        }
+        if (userForm.getName().isBlank()){
+            errorMessages.add("・氏名を入力してください");
+        }
+        if (Integer.toString(branchId).isBlank()){
+            errorMessages.add("・支社を選択してください");
+        }
+        if (Integer.toString(departmentId).isBlank()){
+            errorMessages.add("・部署を選択してください");
+        }
 
         //パスワード・パスワード(確認用)が同じかチェック
         if(!password.equals(passwordConfirmation)) {
-            errorMessages.add("パスワードと確認用パスワードが一致しません");
+            errorMessages.add("・パスワードと確認用パスワードが一致しません");
         }
 
         //支社と部署の組み合わせが妥当か
         if((branchId == 1)  && (departmentId == 3 || departmentId == 4)) {
-            errorMessages.add("支社と部署の組み合わせが不正です");
+            errorMessages.add("・支社と部署の組み合わせが不正です");
         }
         if((branchId == 2 || branchId == 3 || branchId ==4)  && (departmentId == 1 || departmentId == 2)) {
-            errorMessages.add("支社と部署の組み合わせが不正です");
+            errorMessages.add("・支社と部署の組み合わせが不正です");
         }
 
-        //パスワードの文字数チェック（アノテーションができなかった時用)
+        //重複チェック
+        UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
+        if (selectedAccount != null){
+            errorMessages.add("・アカウントが重複しています");
+        }
+
+        //アカウント・パスワードの文字数チェック（アノテーションができなかった時用)
+        if((!userForm.getAccount().isBlank()) && (!userForm.getAccount().matches("^[a-zA-Z0-9]{6,20}+$"))) {
+            errorMessages.add("・アカウントは半角英数字かつ6文字以上20文字以下で入力してください");
+        }
+
         if((!StringUtils.isBlank(password)) && (!password.matches("^[!-~]{6,20}+$"))) {
-            errorMessages.add("パスワードは半角文字かつ6文字以上20文字以下で入力してください");
+            errorMessages.add("・パスワードは半角文字かつ6文字以上20文字以下で入力してください");
         }
 
         if(result.hasErrors()) {
@@ -369,6 +449,80 @@ public class ForumController {
         if(StringUtils.isBlank(password)){
             userForm.setPassword(editUserForm.getPassword());
         }
+        userService.saveUser(userForm);
+
+        //ユーザー管理画面へリダイレクト
+        return new ModelAndView("redirect:/userManage");
+    }
+
+    /*
+     *ユーザー登録画面表示
+     */
+    @GetMapping("/newEntry")
+    public ModelAndView newEntry(){
+        ModelAndView mav = new ModelAndView();
+
+        //空のユーザー情報をセット
+        UserForm newEntry = new UserForm();
+
+        //画面にバインド
+        mav.addObject("user", newEntry);
+
+        //画面遷移先を指定
+        mav.setViewName("/user_entry");
+
+        //画面に遷移
+        return mav;
+    }
+
+    /*
+     *ユーザー登録処理
+     */
+    @PutMapping("/newEntry")
+    public ModelAndView entryUser(@ModelAttribute("user") UserForm userForm, @RequestParam(name="branch") Integer branchId,
+                                  @RequestParam(name="department") Integer departmentId){
+        ModelAndView mav = new ModelAndView();
+
+        //バリデーション　必須チェック
+        List<String> errorMessages = new ArrayList<String>();
+        if (userForm.getAccount().isBlank()){
+            errorMessages.add("・アカウントを入力してください");
+        }
+        if (userForm.getPassword().isBlank()){
+            errorMessages.add("・パスワードを入力してください");
+        }
+        if (userForm.getName().isBlank()){
+            errorMessages.add("・氏名を入力してください");
+        }
+        if (Integer.toString(branchId).isBlank()){
+            errorMessages.add("・支社を選択してください");
+        }
+        if (Integer.toString(departmentId).isBlank()){
+            errorMessages.add("・部署を選択してください");
+        }
+        //重複チェック
+        UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
+        if (selectedAccount != null){
+            errorMessages.add("・アカウントが重複しています");
+        }
+        //妥当性チェック
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
+            errorMessages.add("・パスワードと確認用パスワードが一致しません");
+        }
+        if (errorMessages.size() != 0){
+            mav.addObject("errorMessages", errorMessages);
+
+            //入力情報の保持
+            userForm.setBranchId(branchId);
+            userForm.setDepartmentId(departmentId);
+            mav.addObject("user", userForm);
+            mav.setViewName("/user_entry");
+            return mav;
+        }
+
+        //登録処理
+        userForm.setBranchId(branchId);
+        userForm.setDepartmentId(departmentId);
         userService.saveUser(userForm);
 
         //ユーザー管理画面へリダイレクト

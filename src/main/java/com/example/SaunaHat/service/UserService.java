@@ -132,4 +132,17 @@ public class UserService {
         }
         return user;
     }
+
+    /*
+     * 重複チェック　入力されたアカウント名を検索
+     */
+    public UserForm findByAccount(String account){
+        List<User> results = userRepository.findByAccount(account);
+        //存在しないアカウントの場合nullを返す
+        if (results.size() == 0) {
+            return null;
+        }
+        List<UserForm> selectedUser = setUserForm(results);
+        return selectedUser.get(0);
+    }
 }
