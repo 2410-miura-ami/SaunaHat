@@ -23,9 +23,9 @@
         <form th:action="@{/logout}" method="get" class="header-item">
             <button type="submit">ログアウト</button>
         </form>
-        <div href="/new" class="new">
+        <a href="/new" class="new">
             <button class="new-button" type="button">新規投稿</button>
-        </div>
+        </a>
     </div>
 </div>
 <div class="narrowDown-button">
@@ -57,7 +57,8 @@
                     <div class="commentText"  th:text="${comment.text}"/>
                     <div class="delete-button" th:object="${loginUser}" th:if="${comment.userAccount == loginUser.account}">
                         <form th:method="delete" th:action="@{/deleteComment/{id}(id=${comment.id})}" >
-                            <input type="submit" value="削除" class="delete" /><br/>
+                            <input type="submit" value="削除" class="delete" />
+                            <p> </p>
                         </form>
                     </div>
                 </div>

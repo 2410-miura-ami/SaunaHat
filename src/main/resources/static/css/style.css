@@ -180,8 +180,8 @@ body {
     white-space: pre-wrap;
     text-align: left;
     background-color: #DDDDDD;
-    width: 70%;
-    border-radius: 3px;
+    width: 90%;
+    border-radius: 5px;
     display: inline-block;
     overflow-wrap: anywhere;
 }
@@ -195,4 +195,5 @@ body {
 .commentArea {
     border: solid;
     background-color: white;
+    border-width: thin
 }
