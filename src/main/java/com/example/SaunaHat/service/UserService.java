@@ -7,6 +7,7 @@ import com.example.SaunaHat.repository.entity.Department;
 import com.example.SaunaHat.repository.entity.Message;
 import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -19,6 +20,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public UserForm selectLoginUser(String account, String password){
         // パスワード暗号化
@@ -83,9 +86,15 @@ public class UserService {
     }
 
     /*
-     *ユーザー編集処理（ユーザー更新）
+     *ユーザー編集・登録処理（ユーザー更新・登録）
      */
     public void saveUser(UserForm reqUser) {
+        /* 暗号化
+        public String createEndocedPwd(String pwd) {
+            String encodedPwd = passwordEncoder.encode(pwd);
+            return encodedPwd;
+        }
+         */
         User saveUser = setUserEntity(reqUser);
         userRepository.save(saveUser);
     }
