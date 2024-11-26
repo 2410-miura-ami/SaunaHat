@@ -59,11 +59,10 @@
                         <div class="delete-button" th:object="${loginUser}" th:if="${comment.userAccount == loginUser.account}">
                             <form th:method="delete" th:action="@{/deleteComment/{id}(id=${comment.id})}" >
                                 <input type="submit" value="削除" class="delete" />
-                                <p> </p>
                             </form>
                         </div>
                     </div>
-
+                    <p> </p>
                 </div>
             </div><br/>
             <form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}" class="addComment">
@@ -86,6 +85,7 @@
                 </div>
             </form>
         </div>
+        <p> </p>
         <!--<form th:method="post" th:action="@{/comment/{id}(id=${message.id})}" th:object="${commentForm}">
         <div class="errorMessages">
             <div th:if="${errorMessage != null}">
@@ -97,7 +97,6 @@
             <input type="submit" value="コメント"/>
         </div>
         </form>-->
-    </div><br/>
 </div>
 </body>
 </html>
