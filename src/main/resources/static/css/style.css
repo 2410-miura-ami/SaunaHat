@@ -19,7 +19,7 @@ body {
 
 .main-contents {
 	margin: 20px;
-	padding: 10px 10px 5px 10px;
+	padding: 10px 10px 10px 10px;
 	background-color: #B4CCCC;
 	height: 100%;
 	width: 80%;
@@ -54,67 +54,71 @@ body {
     background-color : #fff;
     border-collapse: collapse;
     border : solid 1px #000;
+    padding-top : 5px;
+    padding-bottom : 5px;
 }
 
 .head-account {
     display : inline-block;
     font-weight : bold;
-    width : 200px;
+    width : 20%;
     padding-left : 10px;
 }
 
 .head-name {
     display : inline-block;
     font-weight : bold;
-    width : 200px;
+    width : 20%;
 }
 
 .head-branch {
     display : inline-block;
     font-weight : bold;
-    width : 100px;
+    width : 15%;
 }
 
 .head-department {
     display : inline-block;
     font-weight : bold;
-    width : 150px;
+    width : 15%;
 }
 
 .head-accountStop {
     display : inline-block;
     font-weight : bold;
-    width : 150px;
+    width : 15%;
+    margin-left : 10%;
 }
 
 .user-account {
     display : inline-block;
-    width : 200px;
+    width : 20%;
     padding-left : 10px;
 }
 
 .user-name {
     display : inline-block;
-    width : 200px;
+    width : 20%;
 }
 
 .user-branch {
     display : inline-block;
-    width : 100px;
+    width : 15%;
 }
 
 .user-department {
     display : inline-block;
-    width : 150px;
+    width : 15%;
 }
 
 .user-accountStop {
      display : inline-block;
-     width : 150px;
+     width : 15%;
  }
 
 .edit-button {
     display : inline-block;
+    width : 10%;
 }
 
 .isStopped-button {
@@ -139,7 +143,7 @@ body {
 }
 
 .updateUser-button {
-    margin : 10px 0 10px 0;
+    margin : 15px 0 10px 0;
  }
 
 .new-title{
@@ -166,4 +170,44 @@ body {
 
 .errorMessages {
      color: red;
+}
+
+.login-conditions {
+    display : inline-block;
+    font-weight : bold;
+    width : 100px;
+}
+
+.login-header {
+    text-align : center;
+}
+
+.login-contents {
+    text-align : center;
+    width : 300px;
+    margin : auto;
+    padding : 20px 20px 20px 20px;
+}
+
+.login-button {
+    margin-top : 20px;
+}
+.account {
+    margin-bottom : 10px;
+}
+
+.newUser-button {
+    margin-left : 20px;
+}
+
+.footer-contents {
+    margin-left : 20px;
+}
+
+.userEdit {
+    width : 450px;
+}
+
+.userManage-contents {
+    width : 70%;
 }

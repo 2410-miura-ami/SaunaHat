@@ -403,7 +403,7 @@ public class ForumController {
 
         //重複チェック
         UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
-        if (selectedAccount != null && (selectedAccount.getId() != userForm.getId())){
+        if ((selectedAccount != null) && (selectedAccount.getId() != userForm.getId())) {
             errorMessages.add("・アカウントが重複しています");
         }
 
