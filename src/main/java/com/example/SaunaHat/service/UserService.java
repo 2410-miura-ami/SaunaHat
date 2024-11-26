@@ -89,7 +89,7 @@ public class UserService {
      *ユーザー編集・登録処理（ユーザー更新・登録）
      */
     public void saveUser(UserForm reqUser) {
-        //pwdの暗号化
+        //pwdの暗号化 新規登録の場合のみ
         String encodedPwd = passwordEncoder.encode(reqUser.getPassword());
         reqUser.setPassword(encodedPwd);
         //エンティティに詰めて登録

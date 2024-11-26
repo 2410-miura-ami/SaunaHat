@@ -16,10 +16,10 @@
         <span th:text="${errorMessage}"></br></span>
       </div>
       <div class="new-title">タイトル
-        <textarea class="new-box" th:field="*{title}" size="20" maxlength="200" /></textarea><br/>
+        <input type="text" th:field="*{title}" /><br/>
       </div>
       <div class="new-category">カテゴリー
-        <textarea class="new-box" th:field="*{category}" size="20" maxlength="200" /></textarea><br/>
+        <input type="text" th:field="*{category}" /><br/>
       </div>
       <div class="new-text">本文
         <textarea class="new-box" th:field="*{text}" size="100" maxlength="500" /></textarea><br/>
