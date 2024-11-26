@@ -7,6 +7,7 @@ import com.example.SaunaHat.repository.entity.Department;
 import com.example.SaunaHat.repository.entity.Message;
 import com.example.SaunaHat.repository.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +24,11 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public UserForm selectLoginUser(String account, String password){
-        // パスワード暗号化
-        //String encPassword = CipherUtil.encrypt(password);
-
+    public UserForm selectLoginUser(String account){
+        //pwdの暗号化
+        //String encodedPwd = passwordEncoder.encode(password);
         //ログインユーザ情報取得
-        List<User> results = userRepository.selectUser(account, password);
+        List<User> results = userRepository.selectUser(account);
         //存在しないアカウントの場合nullを返す
         if (results.size() == 0) {
             return null;
@@ -89,12 +89,10 @@ public class UserService {
      *ユーザー編集・登録処理（ユーザー更新・登録）
      */
     public void saveUser(UserForm reqUser) {
-        /* 暗号化
-        public String createEndocedPwd(String pwd) {
-            String encodedPwd = passwordEncoder.encode(pwd);
-            return encodedPwd;
-        }
-         */
+        //pwdの暗号化
+        String encodedPwd = passwordEncoder.encode(reqUser.getPassword());
+        reqUser.setPassword(encodedPwd);
+        //エンティティに詰めて登録
         User saveUser = setUserEntity(reqUser);
         userRepository.save(saveUser);
     }
