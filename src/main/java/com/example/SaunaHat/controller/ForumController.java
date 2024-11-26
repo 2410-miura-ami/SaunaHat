@@ -446,14 +446,14 @@ public class ForumController {
         if (Integer.toString(departmentId).isBlank()){
             errorMessages.add("・部署を選択してください");
         }
-        //重複チェック
+        //妥当性チェック
         if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
             errorMessages.add("・パスワードと確認用パスワードが一致しません");
         }
         if (errorMessages.size() != 0){
             mav.addObject("errorMessages", errorMessages);
             mav.addObject("user", userForm);
-            mav.setViewName("/newEntry");
+            mav.setViewName("/user_entry");
             return mav;
         }
 

@@ -131,4 +131,13 @@ public class UserService {
         }
         return user;
     }
+
+    /*
+     * 重複チェック　入力されたアカウント名を検索
+     */
+    public UserForm findByName(String account){
+        List<User> results = userRepository.findByAccount(account);
+        List<UserForm> selectedUser = setUserForm(results);
+        return selectedUser.get(0);
+    }
 }
