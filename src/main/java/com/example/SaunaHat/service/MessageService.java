@@ -102,8 +102,7 @@ public class MessageService {
     public void saveMessage(MessageForm reqMessage, UserForm reqLoginUser) {
         //ログインユーザ情報をUser型で取得
         String loginAccount = reqLoginUser.getAccount();
-        String loginPassword = reqLoginUser.getPassword();
-        List<User> results = userRepository.selectUser(loginAccount, loginPassword);
+        List<User> results = userRepository.selectUser(loginAccount);
         User loginUser = results.get(0);
         //投稿、ログインユーザ情報をEntityに詰める
         Message saveMessage = setMessageEntity(reqMessage, loginUser);
