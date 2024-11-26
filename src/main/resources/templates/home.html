@@ -61,7 +61,7 @@
         </div>
         <div class="comments" th:each="comment:${comments}">
             <div th:if="${comment.messageId == message.id}">
-                <div class="name">
+                <div class="name commentName">
                     コメント者名：<span th:text="${comment.userName}"/>
                 </div>
                 <div class="text">

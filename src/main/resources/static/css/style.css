@@ -37,6 +37,10 @@ body {
     font-weight: bold;
 }
 
+.commentName {
+    display : block;
+}
+
 .createdDate {
     font-size: 12px;
     color: silver;
@@ -159,6 +163,9 @@ body {
 .new-text{
     font-weight : bold;
         width : 100px;
+}
+.text {
+    display : inline-block;
 }
 .delete-button{
     display : inline-block;
