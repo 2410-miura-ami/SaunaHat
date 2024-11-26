@@ -9,8 +9,13 @@ body {
 .header {
 	text-align: right;
 }
+
 .header-item {
     display : inline-block;
+}
+
+.new-button {
+    text-align: left;
 }
 
 .userList-title {
@@ -37,8 +42,8 @@ body {
     font-weight: bold;
 }
 
-.commentName {
-    display : block;
+.commentText {
+    display : inline-block;
 }
 
 .createdDate {
@@ -52,6 +57,32 @@ body {
 
 .text {
     font-size: 12px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.commentArea {
+    background-color : #fff;
+    font-size: 12px;
+}
+
+.comments {
+    background-color : #EEEEEE;
+    border-radius: 10px;
+    width: 95%;
+}
+
+.commentName {
+    font-weight: bold;
+}
+
+.commentText {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.add-comment {
+    display: inline-block;
 }
 
 .user-list {
@@ -163,13 +194,16 @@ body {
 .new-text{
     font-weight : bold;
         width : 100px;
+
 }
 .text {
     display : inline-block;
 }
 .delete-button{
     display : inline-block;
+    text-align : right;
 }
+
 .delete{
     border-color : red;
     color : red;
