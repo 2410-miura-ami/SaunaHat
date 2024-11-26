@@ -15,7 +15,7 @@
         <span th:text="${managementErrorMessage}"/>
     </div>
     <div class="header">
-        <div th:if="${departmentId == 1}">
+        <div th:if="${departmentId == 1}" class="header-item">
             <form th:action="@{/userManage}" method="get" class="header-item">
                 <button type="submit">ユーザー管理</button>
             </form>
@@ -51,10 +51,12 @@
         </div>
         </div>
         <div class="commentArea">
-            <div class="comments" th:each="comment:${comments}">
+            <div th:each="comment:${comments}">
                 <div th:if="${comment.messageId == message.id}">
-                    <div class="commentName" th:text="${comment.userName}"/>
-                    <div class="commentText"  th:text="${comment.text}"/>
+                    <div class="comments">
+                        <div class="commentName" th:text="${comment.userName}"/>
+                        <div class="commentText"  th:text="${comment.text}"/>
+                    </div>
                     <div class="delete-button" th:object="${loginUser}" th:if="${comment.userAccount == loginUser.account}">
                         <form th:method="delete" th:action="@{/deleteComment/{id}(id=${comment.id})}" >
                             <input type="submit" value="削除" class="delete" />
@@ -68,7 +70,7 @@
                     <div th:if="${errorMessage != null}">
                         <div th:if="${message.id == commentForm.messageId}" >
                             <span th:text="${errorMessage}"/><br/>
-                            <textarea th:field="*{errorText}" class="add-comment" ></textarea><br/>
+                            <textarea th:field="*{errorText}" class="add-comment" ></textarea>
                             <input type="submit" value="コメント"/>
                         </div>
                         <div th:if="${message.id != commentForm.messageId}" >
