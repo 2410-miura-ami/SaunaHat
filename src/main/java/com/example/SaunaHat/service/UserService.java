@@ -98,6 +98,15 @@ public class UserService {
     }
 
     /*
+     *ユーザー編集(パスワード空欄の時）
+     */
+    public void saveUserPassword(UserForm reqUser) {
+        //エンティティに詰めて登録(パスワードは以前設定したもの(暗号化済み)をセットしている)
+        User saveUser = setUserEntity(reqUser);
+        userRepository.save(saveUser);
+    }
+
+    /*
      * 取得した情報をEntityに設定
      */
     public User setUserEntity(UserForm reqUser) {
