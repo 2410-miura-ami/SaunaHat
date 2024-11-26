@@ -15,7 +15,7 @@
         <span th:text="${managementErrorMessage}"/>
     </div>
     <div class="header">
-        <div th:if="${departmentId == 1}">
+        <div th:if="${departmentId == 1}" class="header-item">
             <form th:action="@{/userManage}" method="get" class="header-item">
                 <button type="submit">ユーザー管理</button>
             </form>

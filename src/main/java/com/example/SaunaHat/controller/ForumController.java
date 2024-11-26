@@ -478,7 +478,7 @@ public class ForumController {
      *ユーザー登録処理
      */
     @PutMapping("/newEntry")
-    public ModelAndView entryUser(@ModelAttribute("user") UserForm userForm, @RequestParam(name="branch") Integer branchId,
+    public ModelAndView entryUser(@ModelAttribute("user") @Validated UserForm userForm, BindingResult result, @RequestParam(name="branch") Integer branchId,
                                   @RequestParam(name="department") Integer departmentId){
         ModelAndView mav = new ModelAndView();
 
@@ -499,14 +499,38 @@ public class ForumController {
         if (Integer.toString(departmentId).isBlank()){
             errorMessages.add("・部署を選択してください");
         }
+        //妥当性チェック　パスワードと確認用パスワードが同一か
+        if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
+            errorMessages.add("・パスワードと確認用パスワードが一致しません");
+        }
+        //支社と部署の組み合わせが妥当か
+        if((branchId == 1)  && (departmentId == 3 || departmentId == 4)) {
+            errorMessages.add("・支社と部署の組み合わせが不正です");
+        }
+        if((branchId == 2 || branchId == 3 || branchId ==4)  && (departmentId == 1 || departmentId == 2)) {
+            errorMessages.add("・支社と部署の組み合わせが不正です");
+        }
         //重複チェック
         UserForm selectedAccount = userService.findByAccount(userForm.getAccount());
         if (selectedAccount != null){
             errorMessages.add("・アカウントが重複しています");
         }
-        //妥当性チェック
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirmation())){
-            errorMessages.add("・パスワードと確認用パスワードが一致しません");
+        //アカウント・パスワードの文字数チェック（アノテーションができなかった時用)
+        if((!userForm.getAccount().isBlank()) && !userForm.getAccount().matches("^[a-zA-Z0-9]{6,20}+$")) {
+            errorMessages.add("・アカウントは半角英数字かつ6文字以上20文字以下で入力してください");
+        }
+        if((!userForm.getPassword().isBlank()) && !userForm.getPassword().matches("^[!-~]{6,20}+$")) {
+            errorMessages.add("・パスワードは半角文字かつ6文字以上20文字以下で入力してください");
+        }
+        //氏名　文字数チェック
+        if(result.hasErrors()) {
+            //エラーがあったら、エラーメッセージを格納する
+            //エラーメッセージの取得
+            for (FieldError error : result.getFieldErrors()) {
+                String message = error.getDefaultMessage();
+                //取得したエラーメッセージをエラーメッセージのリストに格納
+                errorMessages.add(message);
+            }
         }
         if (errorMessages.size() != 0){
             mav.addObject("errorMessages", errorMessages);

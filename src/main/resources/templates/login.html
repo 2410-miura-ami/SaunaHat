@@ -6,22 +6,26 @@
   <title>ログイン</title>
 </head>
 <body>
-<div class="header-contents">
-  <h1>ログイン画面</h1>
+<div class="header-contents login-header">
+  <h1>掲示板ログイン</h1>
 </div>
-<div class="main-contents">
+<div class="main-contents login-contents">
   <div class="errorMessages" th:each="errorMessage : ${errorMessages}">
     <p th:text="${errorMessage}"></p>
   </div>
   <form th:action="loginUser" th:method="get" th:object="${formModel}">
 
-    <label class="account">アカウント名</label>
-    <input name="account" th:id="account" /><br/>
+    <div class="account">
+      <label class="login-conditions">アカウント名</label>
+      <input name="account" th:id="account" /><br/>
+    </div>
 
-    <label class="password">パスワード</label>
-    <input name="password" type="password" th:id="password"/><br/>
+    <div class="password">
+      <label class="login-conditions">パスワード</label>
+      <input name="password" type="password" th:id="password"/><br/>
+    </div>
 
-    <input type="submit" value="ログイン" /> <br />
+    <input type="submit" value="ログイン" class="login-button" /> <br />
   </form>
 </div>
 </body>
