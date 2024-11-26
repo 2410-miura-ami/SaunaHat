@@ -450,8 +450,10 @@ public class ForumController {
         //パスワードの入力無いとき
         if(StringUtils.isBlank(password)){
             userForm.setPassword(editUserForm.getPassword());
+            userService.saveUserPassword(userForm);
+        } else {
+            userService.saveUser(userForm);
         }
-        userService.saveUser(userForm);
 
         //ユーザー管理画面へリダイレクト
         return new ModelAndView("redirect:/userManage");
