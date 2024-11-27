@@ -19,7 +19,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/editUser/*");
         bean.addUrlPatterns("/accountStop/*");
         bean.addUrlPatterns("/update/*");
-        //bean.addUrlPatterns("/newEntry/*");
+        bean.addUrlPatterns("/newEntry/*");
 
         //フィルターの適用順序を指定（2番目）
         bean.setOrder(2);
@@ -43,7 +43,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/editUser/*");
         bean.addUrlPatterns("/accountStop/*");
         bean.addUrlPatterns("/update/*");
-        //bean.addUrlPatterns("/newEntry/*");
+        bean.addUrlPatterns("/newEntry/*");
 
 
 

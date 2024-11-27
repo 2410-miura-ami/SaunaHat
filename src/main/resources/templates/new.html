@@ -15,7 +15,7 @@
       <div th:each="errorMessage : ${errorMessages}">
         <span th:text="${errorMessage}"></br></span>
       </div>
-      <div class="new-title">タイトル
+      <div class="new-title">件名
         <textarea class="new-box" th:field="*{title}" size="20" maxlength="200" /></textarea><br/>
       </div>
       <div class="new-category">カテゴリー

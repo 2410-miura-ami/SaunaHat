@@ -44,18 +44,22 @@
         <div class="user-accountStop">
             <span th:if="${user.isStopped} == 0">
                 <span>実行中</span>
-                <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
-                	<input type="submit" value="停止" />
-			        <input name="userId" th:value="${user.id}" type="hidden" />
-            	</form>
+                <span th:if="${loginUserId != user.id}">
+                    <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
+                        <input type="submit" value="停止" />
+                        <input name="userId" th:value="${user.id}" type="hidden" />
+                    </form>
+                </span>
             </span>
 
             <span th:if="${user.isStopped} == 1">
                 <span class="stop-now">停止中</span>
-                <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
-                	<input type="submit" value="復活" />
-			        <input name="userId" th:value="${user.id}" type="hidden" />
-            	</form>
+                <span th:if="${loginUserId != user.id}">
+                    <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
+                        <input type="submit" value="復活" />
+                        <input name="userId" th:value="${user.id}" type="hidden" />
+                    </form>
+                </span>
       	    </span>
         </div>
 

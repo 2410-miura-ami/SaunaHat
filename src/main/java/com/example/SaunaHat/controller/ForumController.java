@@ -254,7 +254,7 @@ public class ForumController {
         if(StringUtils.isBlank(text)){
             errorMessage = "メッセージを入力してください";
         }else if(text.length() > 500){
-            errorMessage = "500文字内で入力してください";
+            errorMessage = "500文以内で入力してください";
         }
         //エラーメッセージが1つでもあった場合はエラーメッセージとコメント本文を画面にセット
         if(!(errorMessage == null)){
@@ -314,6 +314,10 @@ public class ForumController {
         //ユーザーデータオブジェクトを保管
         mav.addObject("users", userData);
 
+        //【追加】セッションからログインユーザーのユーザーIdを取得
+        int loginUserId = ((UserForm) session.getAttribute("loginUser")).getId();
+        mav.addObject("loginUserId", loginUserId);
+
         //画面遷移先を指定
         mav.setViewName("/user_manage");
 
@@ -328,13 +332,18 @@ public class ForumController {
     public ModelAndView accountStop(@PathVariable Integer isStoppedId, @RequestParam(name = "userId")Integer userId) {
         ModelAndView mav = new ModelAndView();
 
-        if(isStoppedId == 0) {
-            isStoppedId = 1;
-        } else if (isStoppedId == 1) {
-            isStoppedId = 0;
+        //セッションからログインユーザーのユーザーIdを取得
+        int loginUserId = ((UserForm) session.getAttribute("loginUser")).getId();
+
+        if(loginUserId != userId) {
+            if(isStoppedId == 0) {
+                isStoppedId = 1;
+            } else if (isStoppedId == 1) {
+                isStoppedId = 0;
+            }
+            //ユーザ復活停止状態を更新
+            userService.editIsStopped(isStoppedId, userId);
         }
-        //ユーザ復活停止状態を更新
-        userService.editIsStopped(isStoppedId, userId);
 
         //ユーザ管理画面へリダイレクト
         return new ModelAndView("redirect:/userManage");
@@ -345,14 +354,40 @@ public class ForumController {
      *ユーザー編集画面表示
      */
     @GetMapping("/editUser/{id}")
-    public ModelAndView editUser(@PathVariable Integer id){
+    public ModelAndView editUser(@PathVariable String id, RedirectAttributes redirectAttributes){
         ModelAndView mav = new ModelAndView();
 
+        List<String> errorMessages = new ArrayList<String>();
+
+        //URLパターン(異常系)Idの数字チェック
+        if(!id.matches("^[0-9]+$")) {
+            errorMessages.add("不正なパラメータが入力されました");
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+            //ユーザー管理画面に遷移
+            return new ModelAndView("redirect:/userManage");
+        }
+        //idを数値型に変換
+        int editId = Integer.parseInt(id);
+
         //編集ユーザー情報を取得
-        UserForm editUser = userService.selectEditUser(id);
+        UserForm editUser = userService.selectEditUser(editId);
+
+        //URLパターン(異常系)Idの存在チェック
+        if(editUser == null) {
+            errorMessages.add("不正なパラメータが入力されました");
+            //エラーメッセージを格納して、ユーザー管理画面へ遷移
+            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
+            //ユーザー管理画面にリダイレクト
+            return new ModelAndView("redirect:/userManage");
+        }
+
 
         //編集するユーザー情報を画面にバインド
         mav.addObject("user", editUser);
+
+        //【追加】セッションからユーザIDを取得・画面にバインド
+        int loginUserId = ((UserForm) session.getAttribute("loginUser")).getId();
+        mav.addObject("loginUserId", loginUserId);
 
         //画面遷移先を指定
         mav.setViewName("/user_edit");
@@ -427,20 +462,29 @@ public class ForumController {
             }
         }
 
+        //idからユーザ情報参照
+        UserForm editUserForm = userService.selectEditUser(id);
+
         if(!errorMessages.isEmpty()) {
             //エラーメッセージに値があれば、エラーメッセージを画面にバインド
             mav.addObject("errorMessages", errorMessages);
             //エラーメッセージ表示後も値保持するため、branchId,departmentIdをセットし直して画面にバインド
             userForm.setBranchId(branchId);
             userForm.setDepartmentId(departmentId);
+            //【追加2行】branchName・departmentNameもセットし直す
+            userForm.setBranchName(editUserForm.getBranchName());
+            userForm.setDepartmentName(editUserForm.getDepartmentName());
+
             mav.addObject("user", userForm);
+            //【追加2行】編集画面遷移する前にログインユーザーも画面にバインド
+            int loginUserId = ((UserForm) session.getAttribute("loginUser")).getId();
+            mav.addObject("loginUserId", loginUserId);
+
             //編集画面にフォワード処理
             mav.setViewName("/user_edit");
             return mav;
         }
 
-        //idからユーザ情報参照
-        UserForm editUserForm = userService.selectEditUser(id);
 
         //更新処理
         userForm.setId(id);
