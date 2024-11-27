@@ -81,6 +81,9 @@ public class UserService {
     public UserForm selectEditUser(Integer id){
         List<User> results = new ArrayList<>();
         results.add(userRepository.findById(id).orElse(null));
+        if (results.get(0) == null) {
+            return null;
+        }
         List<UserForm> users = setUserForm(results);
         return users.get(0);
     }

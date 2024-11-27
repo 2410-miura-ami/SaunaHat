@@ -13,11 +13,11 @@
   <div class="errorMessages" th:each="errorMessage : ${errorMessages}">
     <p th:text="${errorMessage}"></p>
   </div>
-  <form th:action="loginUser" th:method="get" th:object="${formModel}">
+  <form th:action="loginUser" th:method="get"><!--th:object="${formModel}"-->
 
     <div class="account">
       <label class="login-conditions">アカウント名</label>
-      <input name="account" th:id="account" /><br/>
+      <input name="account" th:value="${account}" /><br/>
     </div>
 
     <div class="password">

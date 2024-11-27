@@ -44,6 +44,7 @@ public class FilterConfig {
         bean.addUrlPatterns("/accountStop/*");
         bean.addUrlPatterns("/update/*");
         bean.addUrlPatterns("/newEntry/*");
+        bean.addUrlPatterns("/add/*");
 
 
 

@@ -9,6 +9,8 @@ import com.example.SaunaHat.service.MessageService;
 import com.example.SaunaHat.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
@@ -41,12 +43,13 @@ public class ForumController {
     @GetMapping
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
-        // form用の空のentityを準備
-        UserForm userForm = new UserForm();
+        /* 空のformを準備
+         *UserForm userForm = new UserForm();
+         *mav.addObject("formModel", userForm);
+         */
+
         // 画面遷移先を指定
         mav.setViewName("/login");
-        // 準備した空のFormを保管
-        mav.addObject("formModel", userForm);
         //エラーメッセージ表示
         List<String> errorMessage = (List<String>) session.getAttribute("errorMessages");
         if (errorMessage != null){
@@ -78,6 +81,7 @@ public class ForumController {
         }
         if (errorMessages.size() != 0){
             ModelAndView mav = new ModelAndView();
+            mav.addObject("account", account);
             mav.addObject("errorMessages", errorMessages);
             mav.setViewName("/login");
             return mav;
@@ -86,10 +90,11 @@ public class ForumController {
         UserForm loginUser = userService.selectLoginUser(account);
         //バリデーション　ユーザが存在しないか停止中ならログイン失敗
         if (loginUser == null || loginUser.getIsStopped() == 1 || !BCrypt.checkpw(password, loginUser.getPassword())){
-            errorMessages.add("ログインに失敗しました");
+            errorMessages.add("・ログインに失敗しました");
         }
         if (errorMessages.size() != 0){
             ModelAndView mav = new ModelAndView();
+            mav.addObject("account", account);
             mav.addObject("errorMessages", errorMessages);
             mav.setViewName("/login");
             return mav;
@@ -314,6 +319,13 @@ public class ForumController {
         //ユーザーデータオブジェクトを保管
         mav.addObject("users", userData);
 
+        //エラーメッセージ表示
+        List<String> errorMessage = (List<String>) session.getAttribute("errorMessages");
+        if (errorMessage != null){
+            mav.addObject("errorMessages", errorMessage);
+            session.removeAttribute("errorMessages");
+        }
+
         //画面遷移先を指定
         mav.setViewName("/user_manage");
 
@@ -344,12 +356,31 @@ public class ForumController {
     /*
      *ユーザー編集画面表示
      */
-    @GetMapping("/editUser/{id}")
-    public ModelAndView editUser(@PathVariable Integer id){
+    @GetMapping ("/editUser/{id}")
+    public ModelAndView editUser(@PathVariable String id){
         ModelAndView mav = new ModelAndView();
-
+        //idの正規表現チェック
+        if((id == null) || (!id.matches("^[0-9]+$"))) {
+            List<String> errorMessages = new ArrayList<String>();
+            errorMessages.add("・不正なパラメータが入力されました");
+            //エラーメッセージを格納して、top画面へ遷移
+            session.setAttribute("errorMessages", errorMessages);
+            //top画面にリダイレクト
+            return new ModelAndView("redirect:/userManage");
+        }
         //編集ユーザー情報を取得
-        UserForm editUser = userService.selectEditUser(id);
+        Integer reqId = Integer.parseInt(id);
+        UserForm editUser = userService.selectEditUser(reqId);
+
+        //editUserがnullならエラーメッセージ表示
+        if(editUser == null){
+            List<String> errorMessages = new ArrayList<String>();
+            errorMessages.add("・不正なパラメータが入力されました");
+            //セッションに詰める
+            session.setAttribute("errorMessages", errorMessages);
+            //リダイレクト
+            return new ModelAndView("redirect:/userManage");
+        }
 
         //編集するユーザー情報を画面にバインド
         mav.addObject("user", editUser);
@@ -359,6 +390,20 @@ public class ForumController {
 
         //画面に遷移
         return mav;
+    }
+
+    /*
+     *　IDが空で渡ってきた場合
+     */
+    @GetMapping("/editUser")
+    public ModelAndView returnUserManage(){
+        //バリデーション
+        List<String> errorMessages = new ArrayList<String>();
+        errorMessages.add("・不正なパラメータが入力されました");
+        //セッションに詰める
+        session.setAttribute("errorMessages", errorMessages);
+        //リダイレクト
+        return new ModelAndView("redirect:/userManage");
     }
 
     /*

@@ -12,17 +12,17 @@
 <div class="main-contents">
   <form method="post" action="/add" th:object="${formModel}">
     <div class="form-area">
-      <div th:each="errorMessage : ${errorMessages}">
+      <div class="errorMessages" th:each="errorMessage : ${errorMessages}">
         <span th:text="${errorMessage}"></br></span>
       </div>
-      <div class="new-title">タイトル
+      <div class="new-title">件名
         <input type="text" th:field="*{title}" /><br/>
       </div>
       <div class="new-category">カテゴリー
         <input type="text" th:field="*{category}" /><br/>
       </div>
       <div class="new-text">本文
-        <textarea class="new-box" th:field="*{text}" size="100" maxlength="500" /></textarea><br/>
+        <textarea class="new-box" th:field="*{text}" size="1500" maxlength="1500" /></textarea><br/>
       </div>
       <input type="submit" value="投稿" />
     </div>
