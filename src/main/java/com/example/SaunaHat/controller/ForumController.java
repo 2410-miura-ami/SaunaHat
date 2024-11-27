@@ -40,7 +40,7 @@ public class ForumController {
     /*
      * ログイン画面表示処理
      */
-    @GetMapping
+    @GetMapping("/login")
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
         /* 空のformを準備
@@ -101,13 +101,13 @@ public class ForumController {
         }
         //セッションにログインユーザ情報を詰める
         session.setAttribute("loginUser",loginUser);
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     /*
      * ホーム画面・投稿表示処理
      */
-    @GetMapping("/home")
+    @GetMapping
     public ModelAndView home(@RequestParam(required = false)String startDate, @RequestParam(required = false)String endDate, @RequestParam(required = false)String category) {
         ModelAndView mav = new ModelAndView();
 
@@ -231,7 +231,7 @@ public class ForumController {
         // 投稿をテーブルに格納
         messageService.saveMessage(messageForm, loginUser);
         // rootへリダイレクト
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     /*
@@ -279,7 +279,7 @@ public class ForumController {
         }
 
         // 画面遷移先を指定
-        mav.setViewName("redirect:/home");
+        mav.setViewName("redirect:/");
         //画面に遷移
         return mav;
     }
@@ -292,7 +292,7 @@ public class ForumController {
         //コメントのIDを引数に削除する
         commentService.deleteComment(id);
         //コメントをテーブルから削除した後、トップ画面へ戻る
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     /*
@@ -303,7 +303,7 @@ public class ForumController {
         //投稿を削除する
         messageService.deleteMessage(id);
         //投稿をテーブルから削除した後、トップ画面へ戻る
-        return new ModelAndView("redirect:/home");
+        return new ModelAndView("redirect:/");
     }
 
     /*
