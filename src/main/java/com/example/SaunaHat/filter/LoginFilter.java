@@ -30,7 +30,7 @@ public class LoginFilter implements Filter {
             errorMessages.add("ログインしてください");
             session.setAttribute("errorMessages", errorMessages);
             //ログイン画面にリダイレクト
-            ((HttpServletResponse) response).sendRedirect("/");
+            ((HttpServletResponse) response).sendRedirect("/SaunaHat");
         }
     }
 
