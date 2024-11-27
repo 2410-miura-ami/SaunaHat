@@ -332,18 +332,13 @@ public class ForumController {
     public ModelAndView accountStop(@PathVariable Integer isStoppedId, @RequestParam(name = "userId")Integer userId) {
         ModelAndView mav = new ModelAndView();
 
-        //セッションからログインユーザーのユーザーIdを取得
-        int loginUserId = ((UserForm) session.getAttribute("loginUser")).getId();
-
-        if(loginUserId != userId) {
-            if(isStoppedId == 0) {
-                isStoppedId = 1;
-            } else if (isStoppedId == 1) {
-                isStoppedId = 0;
-            }
-            //ユーザ復活停止状態を更新
-            userService.editIsStopped(isStoppedId, userId);
+        if(isStoppedId == 0) {
+            isStoppedId = 1;
+        } else if (isStoppedId == 1) {
+            isStoppedId = 0;
         }
+        //ユーザ復活停止状態を更新
+        userService.editIsStopped(isStoppedId, userId);
 
         //ユーザ管理画面へリダイレクト
         return new ModelAndView("redirect:/userManage");
@@ -354,33 +349,13 @@ public class ForumController {
      *ユーザー編集画面表示
      */
     @GetMapping("/editUser/{id}")
-    public ModelAndView editUser(@PathVariable String id, RedirectAttributes redirectAttributes){
+    public ModelAndView editUser(@PathVariable Integer id){
         ModelAndView mav = new ModelAndView();
 
         List<String> errorMessages = new ArrayList<String>();
 
-        //URLパターン(異常系)Idの数字チェック
-        if(!id.matches("^[0-9]+$")) {
-            errorMessages.add("不正なパラメータが入力されました");
-            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-            //ユーザー管理画面に遷移
-            return new ModelAndView("redirect:/userManage");
-        }
-        //idを数値型に変換
-        int editId = Integer.parseInt(id);
-
         //編集ユーザー情報を取得
-        UserForm editUser = userService.selectEditUser(editId);
-
-        //URLパターン(異常系)Idの存在チェック
-        if(editUser == null) {
-            errorMessages.add("不正なパラメータが入力されました");
-            //エラーメッセージを格納して、ユーザー管理画面へ遷移
-            redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-            //ユーザー管理画面にリダイレクト
-            return new ModelAndView("redirect:/userManage");
-        }
-
+        UserForm editUser = userService.selectEditUser(id);
 
         //編集するユーザー情報を画面にバインド
         mav.addObject("user", editUser);
