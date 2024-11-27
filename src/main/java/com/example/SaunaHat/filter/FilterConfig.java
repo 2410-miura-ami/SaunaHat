@@ -34,7 +34,7 @@ public class FilterConfig {
         FilterRegistrationBean bean = new FilterRegistrationBean(new LoginFilter());
 
         //フィルターを適用するURLを指定（ログイン画面以外）
-        bean.addUrlPatterns("/home/*");
+        bean.addUrlPatterns("/");
         bean.addUrlPatterns("/new/*");
         bean.addUrlPatterns("/delete/*");
         bean.addUrlPatterns("/comment/*");
