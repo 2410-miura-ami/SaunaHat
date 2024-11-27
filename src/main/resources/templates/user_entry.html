@@ -64,7 +64,7 @@
                 </select>
             </div>
 
-            <input type="submit" value="更新" class="updateUser-button" />
+            <input type="submit" value="追加" class="updateUser-button" />
 
         </div>
 
@@ -72,7 +72,10 @@
 
 </div>
 <div class="footer-contents">
-    <form action="/userManage">
+    <!--<form action="/userManage">
+        <input type="submit" value="戻る" />
+    </form>-->
+    <form th:action="@{/userManage}">
         <input type="submit" value="戻る" />
     </form>
 </div>

@@ -17,9 +17,12 @@
     <p th:text="${errorMessage}"></p>
 </div>
 
-<a href="/newEntry">
+<!--<a href="/newEntry">
     <button class="newUser-button" type="button">新規登録</button>
-</a>
+</a>-->
+<form th:action="@{/newEntry}">
+    <input class="newUser-button" type="submit" value="新規登録"/>
+</form>
 <p class="userList-title">ユーザー一覧</p>
 <div class="main-contents userManage-contents">
     <div class="head-account">アカウント</div>
@@ -63,7 +66,10 @@
 
 </div>
 <div class="footer-contents">
-    <form action="/home">
+    <!--<form action="/home">
+        <input type="submit" value="戻る" />
+    </form>-->
+    <form th:action="@{/home}">
         <input type="submit" value="戻る" />
     </form>
 </div>

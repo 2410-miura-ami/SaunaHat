@@ -24,9 +24,12 @@
             <button type="submit">ログアウト</button>
         </form>
     </div>
-    <a href="/new" class="new">
+    <!--<a href="/new" class="new">
         <button class="new-button" type="button">新規投稿</button>
-    </a>
+    </a>-->
+    <form th:action="@{/new}" method="get" class="new">
+        <button type="submit">新規投稿</button>
+    </form>
 </div>
 <div class="narrowDown-button">
     <form th:method="get">

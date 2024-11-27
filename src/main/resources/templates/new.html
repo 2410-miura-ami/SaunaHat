@@ -10,12 +10,13 @@
   <h2>新規投稿</h2>
 </div>
 <div class="main-contents">
-  <form method="post" action="/add" th:object="${formModel}">
+  <!--<form method="post" action="/add" th:object="${formModel}">-->
+  <form method="post" th:action="@{/add}" th:object="${formModel}">
     <div class="form-area">
       <div th:each="errorMessage : ${errorMessages}">
         <span th:text="${errorMessage}"></br></span>
       </div>
-      <div class="new-title">タイトル
+      <div class="new-title">件名
         <textarea class="new-box" th:field="*{title}" size="20" maxlength="200" /></textarea><br/>
       </div>
       <div class="new-category">カテゴリー
@@ -29,7 +30,10 @@
   </form>
 </div>
 <div class="footer-contents">
-  <form action="/home">
+  <!--<form action="/home">
+    <input type="submit" value="戻る" />
+  </form>-->
+  <form th:action="@{/home}">
     <input type="submit" value="戻る" />
   </form>
 </div>

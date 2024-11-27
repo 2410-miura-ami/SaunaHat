@@ -66,7 +66,7 @@ public class MessageService {
             results = messageRepository.selectMessage(StartDate, EndDate);
         }else{
             //カテゴリの絞り込みありでセレクト
-            results = messageRepository.selectMessageByCategory(StartDate, EndDate, category);
+            results = messageRepository.selectMessageByCategory(StartDate, EndDate, "%" + category + "%");
         }
         //EntityからFormに詰め替え
         List<MessageForm> reports = setMessageForm(results);
