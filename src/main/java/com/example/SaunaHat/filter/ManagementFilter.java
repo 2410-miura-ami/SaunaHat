@@ -35,7 +35,7 @@ public class ManagementFilter implements Filter {
             String managementErrorMessage = "無効なアクセスです";
             session.setAttribute("managementErrorMessage", managementErrorMessage);
             //ホーム画面にリダイレクト
-            ((HttpServletResponse) response).sendRedirect("/home");
+            ((HttpServletResponse) response).sendRedirect("/SaunaHat/home");
         }
     }
 

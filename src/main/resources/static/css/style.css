@@ -177,6 +177,12 @@ body {
     display : inline-block;
 }
 
+.userBranch {
+    display : inline-block;
+    font-weight : normal;
+    font-size : 13px;
+}
+
 .updateUser-button {
     margin : 15px 0 10px 0;
  }

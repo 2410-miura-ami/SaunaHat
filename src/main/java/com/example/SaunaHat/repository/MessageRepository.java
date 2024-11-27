@@ -32,7 +32,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Transactional
     @Query(value = "SELECT m FROM Message m JOIN FETCH m.user u " +
             "WHERE m.createdDate BETWEEN :startDate AND :endDate " +
-            "AND m.category = :category " +
+            "AND m.category LIKE :category " +
             "ORDER BY m.createdDate DESC")
     public List<Message> selectMessageByCategory(@Param("startDate")Date startDate, @Param("endDate")Date endDate, @Param("category")String category);
 }

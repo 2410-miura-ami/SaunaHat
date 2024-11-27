@@ -42,23 +42,37 @@
 
             <div class="edit-items">
                 <div class="head-edit-item">支社</div>
-                <select name="branch">
-                    <option value="1" th:selected="${user.branchId == 1}">本社</option>
-                    <option value="2" th:selected="${user.branchId == 2}">A支社</option>
-                    <option value="3" th:selected="${user.branchId == 3}">B支社</option>
-                    <option value="4" th:selected="${user.branchId == 4}">C支社</option>
-                </select>
+                <span th:if="${loginUserId != user.id}">
+                    <select name="branch">
+                        <option value="1" th:selected="${user.branchId == 1}">本社</option>
+                        <option value="2" th:selected="${user.branchId == 2}">A支社</option>
+                        <option value="3" th:selected="${user.branchId == 3}">B支社</option>
+                        <option value="4" th:selected="${user.branchId == 4}">C支社</option>
+                    </select>
+                </span>
+
+                <span th:if="${loginUserId == user.id}">
+                    <div class="userBranch" th:text="${user.branchName}"></div>
+                    <input name="branch" th:value="${user.branchId}" type="hidden" />
+                </span>
 
             </div>
 
             <div class="edit-items">
                 <div class="head-edit-item">部署</div>
-                <select name="department">
-                    <option value="1" th:selected="${user.departmentId == 1}">総務人事部</option>
-                    <option value="2" th:selected="${user.departmentId == 2}">情報管理部</option>
-                    <option value="3" th:selected="${user.departmentId == 3}">営業部</option>
-                    <option value="4" th:selected="${user.departmentId == 4}">技術部</option>
-                </select>
+                <span th:if="${loginUserId != user.id}">
+                    <select name="department">
+                        <option value="1" th:selected="${user.departmentId == 1}">総務人事部</option>
+                        <option value="2" th:selected="${user.departmentId == 2}">情報管理部</option>
+                        <option value="3" th:selected="${user.departmentId == 3}">営業部</option>
+                        <option value="4" th:selected="${user.departmentId == 4}">技術部</option>
+                    </select>
+                </span>
+
+                <span th:if="${loginUserId == user.id}">
+                    <div class="userBranch" th:text="${user.departmentName}"></div>
+                    <input name="department" th:value="${user.departmentId}" type="hidden" />
+                </span>
             </div>
 
             <input type="submit" value="更新" class="updateUser-button" />
@@ -69,7 +83,10 @@
 
 </div>
 <div class="footer-contents">
-    <form action="/userManage">
+    <!--<form action="/userManage">
+        <input type="submit" value="戻る" />
+    </form>-->
+    <form th:action="@{/userManage}">
         <input type="submit" value="戻る" />
     </form>
 </div>
