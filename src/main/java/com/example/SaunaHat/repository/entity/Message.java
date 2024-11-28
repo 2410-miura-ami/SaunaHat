@@ -27,7 +27,7 @@ public class Message {
     private String category;
 
     //Userと多対一でリレーションを形成
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

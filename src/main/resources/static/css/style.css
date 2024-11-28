@@ -52,7 +52,9 @@ body {
 }
 
 .title {
+    font-size: 15px;
     font-weight: bold;
+    vertical-align: top;
 }
 
 .text {

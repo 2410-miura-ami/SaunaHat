@@ -88,6 +88,7 @@ public class MessageService {
             message.setText(result.getText());
             message.setCategory(result.getCategory());
             message.setCreatedDate(result.getCreatedDate());
+            message.setUserId(result.getUser().getId());
             message.setUserAccount(result.getUser().getAccount());
             message.setUserName(result.getUser().getName());
 

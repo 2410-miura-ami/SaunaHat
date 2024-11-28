@@ -50,7 +50,7 @@ public class User {
     private Date updatedDate;
 
     //Messageと一対多でリレーションを形成
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Message> messages;
 
 }
