@@ -47,7 +47,7 @@
         <div class="createdDate" span th:text="${#dates.format(message.createdDate, 'yyyy年MM月dd日')}"/>
         <p class="title" th:text="${message.title}"/>
         <div class="text"  th:text="${message.text}"/>
-        <div class="delete-button" th:each="loginUser:${loginUser}" th:if="${message.userAccount == loginUser.account}">
+        <div class="delete-button" th:each="loginUser:${loginUser}" th:if="${message.userAccount == loginUser.account || loginUser.departmentId == 2}">
             <form th:method="delete" th:action="@{/delete/{id}(id=${message.id})}" >
                 <input type="submit" value="削除" class="delete" />
             </form>

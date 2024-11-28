@@ -32,7 +32,10 @@
     <div class="head-accountStop">アカウント停止状況</div>
 
     <div class="user-list" th:each="user : ${users}">
-        <div class="user-account" th:text="${user.account}"></div>
+        <div class="user-account">
+            <span th:text="${user.account}"></span>
+            <span th:if="${loginUserId == user.id}" class="login-now">(ログイン中)</span>
+        </div>
         <div class="user-name" th:text="${user.name}"></div>
         <div class="user-branch" th:text="${user.branchName}"></div>
         <div class="user-department" th:text="${user.departmentName}"></div>
@@ -58,7 +61,7 @@
             <span th:if="${user.isStopped} == 1">
                 <span class="stop-now">停止中</span>
                 <span th:if="${loginUserId != user.id}">
-                    <form class="isStopped-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
+                    <form class="revival-button" method="put" th:action="@{/accountStop/{isStoppedId}(isStoppedId=${user.isStopped})}" >
                         <input type="submit" value="復活" />
                         <input name="userId" th:value="${user.id}" type="hidden" />
                     </form>

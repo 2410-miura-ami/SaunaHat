@@ -29,10 +29,21 @@ body {
 	height: 100%;
 	width: 80%;
 }
+.new {
+margin-bottom : 10px;
+}
+
+.narrowDown-button {
+    padding-left : 20px;
+}
 
 .message-icon {
     background-color: white;
     border: 0.5px solid black;
+}
+
+.message {
+    padding-left : 10px;
 }
 
 .name, .category {
@@ -40,6 +51,7 @@ body {
     width: 15%;
     font-size: 12px;
     font-weight: bold;
+    padding-left : 10px;
 }
 
 .commentText {
@@ -49,16 +61,19 @@ body {
 .createdDate {
     font-size: 12px;
     color: silver;
+    padding-left : 10px;
 }
 
 .title {
     font-weight: bold;
+    padding-left : 10px;
 }
 
 .text {
     font-size: 12px;
     overflow-wrap: anywhere;
     white-space: pre-wrap;
+    padding-left : 10px;
 }
 
 .commentArea {
@@ -70,6 +85,7 @@ body {
     background-color : #EEEEEE;
     border-radius: 10px;
     width: 95%;
+    padding-left : 10px;
 }
 
 .commentName {
@@ -131,6 +147,11 @@ body {
     padding-left : 10px;
 }
 
+.login-now {
+    font-size : 13px;
+    color : #aaa;
+}
+
 .user-name {
     display : inline-block;
     width : 20%;
@@ -157,6 +178,10 @@ body {
 }
 
 .isStopped-button {
+    display : inline-block;
+}
+
+.revival-button {
     display : inline-block;
 }
 
@@ -252,7 +277,7 @@ body {
 }
 
 .userEdit {
-    width : 450px;
+    width : 550px;
 }
 
 .userManage-contents {
