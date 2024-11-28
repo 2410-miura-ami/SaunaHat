@@ -52,9 +52,7 @@ body {
 }
 
 .title {
-    font-size: 15px;
     font-weight: bold;
-    vertical-align: top;
 }
 
 .text {
@@ -159,6 +157,9 @@ body {
 }
 
 .isStopped-button {
+    display : inline-block;
+}
+.revival-button {
     display : inline-block;
 }
 
